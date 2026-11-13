@@ -43,6 +43,7 @@ h2{font-size:clamp(1.9rem,4.6vw,3.1rem);line-height:1.08;letter-spacing:var(--ls
 .nav{display:flex;gap:1.5rem;font-size:.92rem;color:var(--muted)}
 .nav a:hover{color:var(--ink)}
 .tools{display:flex;align-items:center;gap:8px}
+.resume-top{white-space:nowrap;font-size:.84rem;padding:.55rem .9rem;border-radius:10px}
 select,.ibtn{font:inherit;font-size:.85rem;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:10px;height:38px;padding:0 10px}
 select{max-width:120px;cursor:pointer}
 .ibtn{width:38px;padding:0;cursor:pointer;display:grid;place-items:center;font-size:1rem}
@@ -174,7 +175,10 @@ footer{padding-block:28px 40px;border-top:1px solid var(--line);color:var(--mute
   .nav.open{display:flex}
   .nav a{padding:12px 0;font-size:1rem}
 }
-@media (max-width:560px){.grid2{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:560px){
+  .grid2{grid-template-columns:minmax(0,1fr)}
+  .resume-top{font-size:.76rem;padding:.48rem .62rem}
+}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
   html{scroll-behavior:auto}
@@ -192,6 +196,7 @@ footer{padding-block:28px 40px;border-top:1px solid var(--line);color:var(--mute
     <a href="#contact" data-i="n_contact">Contact</a>
   </nav>
   <div class="tools">
+    <a class="btn pri resume-top" href="https://drive.google.com/file/d/1AZjmxoNQSclGPS00kyY3m5lhIfVk0R2f/view?usp=sharing" target="_blank" rel="noopener noreferrer" aria-label="View resume">View Resume <span aria-hidden="true">&nearr;</span></a>
     <select id="lang" aria-label="Language"></select>
     <button class="ibtn" id="theme" aria-label="Theme" type="button">&#9680;</button>
     <button class="ibtn menu" id="menu" aria-label="Menu" aria-expanded="false" type="button">&#9776;</button>
@@ -213,7 +218,7 @@ footer{padding-block:28px 40px;border-top:1px solid var(--line);color:var(--mute
     </div>
   </div>
   <div class="editor" aria-label="Code editor animation">
-    <div class="ebar"><i></i><i></i><i></i><span>queue/worker.ts</span></div>
+    <div class="ebar"><i></i><i></i><i></i><span>kartikey/tech-stack.ts</span></div>
     <pre class="code" id="code"></pre>
     <div class="term" id="term"></div>
   </div>
@@ -650,8 +655,8 @@ if(!RM){
 }
 
 /* ---------- typing code editor ---------- */
-const CODE=['import { Queue, Worker } from "bullmq";','','const jobs = new Queue("document-ai");','','export async function enqueue(doc) {','  await jobs.add("classify", doc, {','    attempts: 5,','    backoff: { type: "exponential" },','  });','}','','new Worker("document-ai", async (job) => {','  const fields = await extract(job.data);','  return verify(fields); // human check','});'].join('\n');
-const TERM=['$ pnpm test','<ok>✓</ok> 134 of 139 routes at parity','<ok>✓</ok> cached latency 15 ms','<ok>✓</ok> queue drained, 0 failed'];
+const CODE=['type EngineerStack = {','','  backend: ["Node.js", "TypeScript", "Fastify", "Express"],','  data: ["PostgreSQL", "Redis", "MongoDB", "OpenSearch"],','  aiSearch: ["OpenAI Embeddings", "Vector Search", "BM25"],','  architecture: ["Microservices", "Event-Driven", "Multi-Tenant"],','  cloud: ["AWS", "Azure", "Docker", "BullMQ"],','  frontend: ["React", "React Native", "Vite"],','};','','const strengths = {','  apiDesign: true,','  systemDesign: true,','  performanceTuning: true,','  productionOwnership: true,','};','','export const profile: EngineerStack = skills;'].join('\n');
+const TERM=['$ pnpm profile:check','<ok>✓</ok> Backend: Node.js + TypeScript','<ok>✓</ok> Data & AI: PostgreSQL + OpenSearch','<ok>✓</ok> Systems: queues, microservices, cloud'];
 const cls=new Array(CODE.length).fill('');
 (function(){const re=/(\/\/.*)|("[^"]*")|\b(import|from|const|export|async|function|await|new|return)\b|\b([A-Za-z_]\w*)(?=\()|\b(\d+)\b/g;let m;
   while((m=re.exec(CODE))){const c=m[1]?'cm':m[2]?'st':m[3]?'kw':m[4]?'fn':'nm';for(let i=m.index;i<m.index+m[0].length;i++)cls[i]=c}})();
