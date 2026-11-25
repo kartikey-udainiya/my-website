@@ -1,696 +1,2322 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
-<title>Kartikey Udainiya</title>
-<meta name="claude:viewport-fit-sides" content="cover">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
-<style>
-/* Layout concept: editorial single column; hero pairs a name with a live typing code editor; sections alternate cornsilk / papaya bands. */
-:root{
-  --bg:#fefae0; --bg2:#faedcd; --card:#f3f3d4; --ink:#2a2b1c; --muted:#5d5e47; --line:#ccd5ae;
-  --accent:#8c5a2b; --bronze:#d4a373; --sage:#ccd5ae; --beige:#e9edc9; --papaya:#faedcd;
-  --code-bg:#20211a; --code-ink:#e9edc9; --c-kw:#d4a373; --c-st:#ccd5ae; --c-fn:#faedcd; --c-cm:#8f9279; --c-nm:#e9c28f;
-  --shadow:0 1px 0 rgba(42,43,28,.04),0 14px 32px -14px rgba(42,43,28,.22);
-  --ff-d:"Bricolage Grotesque","Inter",system-ui,sans-serif; --ff-b:"Inter",system-ui,-apple-system,"Segoe UI","Noto Sans","Noto Sans Devanagari","Noto Sans Arabic","Hiragino Sans","PingFang SC",sans-serif;
-  --ff-m:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; --ls:-.025em;
-}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#1a1b11; --bg2:#212318; --card:#272a1c; --ink:#fefae0; --muted:#b8bb9b; --line:#3a3e29; --accent:#d4a373;
-  --code-bg:#11120b; --shadow:0 1px 0 rgba(0,0,0,.3),0 16px 34px -14px rgba(0,0,0,.6); color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#1a1b11; --bg2:#212318; --card:#272a1c; --ink:#fefae0; --muted:#b8bb9b; --line:#3a3e29; --accent:#d4a373;
-  --code-bg:#11120b; --shadow:0 1px 0 rgba(0,0,0,.3),0 16px 34px -14px rgba(0,0,0,.6); color-scheme:dark}
-html[data-script="other"]{--ls:0em}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{font-family:var(--ff-b);font-size:16px;line-height:1.65;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bg)}
-a{color:inherit;text-decoration:none}
-main{overflow-x:clip}
-section{padding-block:clamp(56px,9vw,104px);scroll-margin-top:72px}
-.wrap{width:100%;max-width:1160px;margin-inline:auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-.alt{background:var(--bg2)}
-.kicker{display:block;font-family:var(--ff-m);font-size:.8rem;color:var(--accent);margin-bottom:.6rem;direction:ltr;text-align:start}
-h1,h2,h3{font-family:var(--ff-d);margin:0}
-h2{font-size:clamp(1.9rem,4.6vw,3.1rem);line-height:1.08;letter-spacing:var(--ls);font-weight:800;text-wrap:balance;margin-bottom:.5em}
-.sub{color:var(--muted);max-width:60ch;margin:0 0 2rem}
-:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
-/* header */
-.hdr{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-.hdr::after{content:"";position:absolute;left:0;bottom:-1px;height:2px;width:100%;background:var(--bronze);transform:scaleX(var(--p,0));transform-origin:left}
-[dir="rtl"] .hdr::after{transform-origin:right}
-.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;height:60px}
-.brand{font-family:var(--ff-d);font-weight:800;width:38px;height:38px;border-radius:10px;background:var(--ink);color:var(--bg);display:grid;place-items:center;letter-spacing:.02em}
-.nav{display:flex;gap:1.5rem;font-size:.92rem;color:var(--muted)}
-.nav a:hover{color:var(--ink)}
-.tools{display:flex;align-items:center;gap:8px}
-.resume-top{white-space:nowrap;font-size:.84rem;padding:.55rem .9rem;border-radius:10px}
-select,.ibtn{font:inherit;font-size:.85rem;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:10px;height:38px;padding:0 10px}
-select{max-width:120px;cursor:pointer}
-.ibtn{width:38px;padding:0;cursor:pointer;display:grid;place-items:center;font-size:1rem}
-.menu{display:none}
-/* buttons */
-.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 1.2rem;border-radius:12px;border:1px solid var(--ink);font-weight:500;transition:transform .2s,background .2s}
-.btn:hover{transform:translateY(-2px)}
-.btn.pri{background:var(--ink);color:var(--bg)}
-.btn.pri:hover{background:var(--accent);border-color:var(--accent)}
-[dir="rtl"] .arr{display:inline-block;transform:scaleX(-1)}
-/* hero */
-.hero{position:relative;overflow:hidden;padding-block:clamp(36px,7vw,84px) clamp(48px,7vw,96px)}
-.hero::before{content:"";position:absolute;top:-18%;right:-10%;width:62vw;height:62vw;max-width:780px;max-height:780px;border-radius:50%;background:radial-gradient(closest-side,color-mix(in srgb,var(--sage) 55%,transparent),transparent);z-index:0}
-.glyph{position:absolute;font-family:var(--ff-m);color:var(--accent);opacity:.2;pointer-events:none;z-index:0;animation:drift linear infinite}
-@keyframes drift{0%{transform:translateY(0) rotate(0)}50%{opacity:.08}100%{transform:translateY(-140px) rotate(12deg)}}
-.hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(28px,5vw,64px);align-items:center}
-.eyebrow{display:inline-flex;align-items:center;gap:.6rem;font-family:var(--ff-m);font-size:.8rem;color:var(--muted);border:1px solid var(--line);padding:.3rem .8rem;border-radius:999px;background:var(--bg)}
-.dot{width:8px;height:8px;border-radius:50%;background:var(--bronze);box-shadow:0 0 0 0 var(--bronze);animation:pulse 2s infinite}
-@keyframes pulse{70%{box-shadow:0 0 0 8px transparent}100%{box-shadow:0 0 0 0 transparent}}
-.hello{margin:1.4rem 0 0;color:var(--muted);font-size:1.1rem}
-.name{font-weight:800;font-size:clamp(2.7rem,9vw,6.2rem);line-height:.95;letter-spacing:-.035em;margin:.1em 0 .2em}
-.ln{display:block;overflow:hidden;padding-bottom:.08em}
-.ln>span{display:block;animation:up .9s cubic-bezier(.2,.8,.2,1) both}
-.ln:nth-child(2)>span{animation-delay:.12s}
-@keyframes up{from{transform:translateY(105%)}to{transform:none}}
-.role{font-family:var(--ff-d);font-weight:600;font-size:clamp(1.2rem,2.4vw,1.6rem);margin:0}
-.rot{font-family:var(--ff-m);color:var(--accent);margin:.3rem 0 1rem;direction:ltr;text-align:start;min-height:1.7em}
-.rot b{font-weight:500;display:inline-block;animation:swap .5s both}
-@keyframes swap{from{transform:translateY(60%);opacity:0}to{transform:none;opacity:1}}
-.tag{max-width:46ch;color:var(--muted);margin:0 0 1.6rem}
-.cta{display:flex;flex-wrap:wrap;gap:12px}
-/* editor */
-.editor{background:var(--code-bg);color:var(--code-ink);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;font-family:var(--ff-m);direction:ltr;text-align:left;border:1px solid color-mix(in srgb,var(--bronze) 28%,transparent);min-width:0}
-.ebar{display:flex;align-items:center;gap:6px;padding:10px 14px;border-bottom:1px solid rgba(233,237,201,.12)}
-.ebar i{width:10px;height:10px;border-radius:50%;background:var(--sage)}
-.ebar i:nth-child(2){background:var(--bronze)}.ebar i:nth-child(3){background:var(--papaya)}
-.ebar span{margin-left:10px;color:var(--c-cm);font-size:.75rem}
-pre.code{margin:0;padding:14px 16px;font:inherit;font-size:clamp(.68rem,1.5vw,.8rem);line-height:1.65;min-height:calc(1.65em*14 + 28px);overflow-x:auto;white-space:pre}
-.term{border-top:1px dashed rgba(233,237,201,.18);padding:12px 16px;font-size:clamp(.68rem,1.5vw,.8rem);line-height:1.65;min-height:calc(1.65em*4 + 24px);white-space:pre-wrap}
-.term .ok{color:var(--c-st)}
-.kw{color:var(--c-kw)}.st{color:var(--c-st)}.fn{color:var(--c-fn)}.cm{color:var(--c-cm)}.nm{color:var(--c-nm)}
-.caret{display:inline-block;width:.55em;height:1.1em;background:var(--bronze);vertical-align:-.2em;animation:blink 1s steps(1) infinite}
-@keyframes blink{50%{opacity:0}}
-/* marquee */
-.marq{border-block:1px solid var(--line);background:var(--bg2);overflow:hidden;padding-block:12px;direction:ltr}
-.row{display:flex;width:max-content;animation:mq 40s linear infinite}
-.row.rev{animation-direction:reverse;animation-duration:52s}
-.row span{font-family:var(--ff-d);font-size:clamp(1.5rem,3.6vw,2.4rem);font-weight:800;padding-inline:1rem;white-space:nowrap;color:transparent;-webkit-text-stroke:1px var(--accent)}
-.row span:nth-child(3n){color:var(--ink);-webkit-text-stroke:0}
-.row span::after{content:"/";margin-inline-start:2rem;color:var(--bronze);-webkit-text-stroke:0}
-@keyframes mq{to{transform:translateX(-50%)}}
-/* about */
-.about{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:clamp(28px,6vw,80px);align-items:center}
-.mono{position:relative;width:min(100%,280px);aspect-ratio:1;margin-inline:auto}
-.ring{position:absolute;inset:0;width:100%;height:100%;animation:spin 40s linear infinite}
-.ring text{font-family:var(--ff-m);font-size:10.5px;fill:var(--accent)}
-@keyframes spin{to{transform:rotate(360deg)}}
-.mono .core{position:absolute;inset:16%;border-radius:50%;background:var(--bg2);border:1px solid var(--line);display:grid;place-items:center;font-family:var(--ff-d);font-weight:800;font-size:clamp(2.6rem,8vw,3.6rem);letter-spacing:-.03em;box-shadow:var(--shadow)}
-.about p{max-width:60ch;color:var(--muted);margin:0 0 1rem}
-/* metrics */
-.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
-.m{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px 20px 20px;box-shadow:var(--shadow);transition:transform .25s}
-.m:hover{transform:translateY(-4px)}
-.num{display:block;font-family:var(--ff-d);font-weight:800;font-size:clamp(2.1rem,4.2vw,3.1rem);line-height:1;letter-spacing:-.03em;font-variant-numeric:tabular-nums;color:var(--ink)}
-.m::before{content:"";display:block;width:28px;height:4px;border-radius:2px;background:var(--bronze);margin-bottom:16px}
-.m p{margin:.7rem 0 0;font-size:.9rem;color:var(--muted);line-height:1.45}
-/* experience */
-.job{display:grid;grid-template-columns:minmax(0,270px) minmax(0,1fr);gap:clamp(18px,4vw,48px);padding-block:32px;border-top:1px solid var(--line)}
-.job h3{font-size:1.5rem;letter-spacing:var(--ls)}
-.when{font-family:var(--ff-m);font-size:.8rem;color:var(--muted);margin:.3rem 0 .8rem;direction:ltr;text-align:start}
-.chips{display:flex;flex-wrap:wrap;gap:6px}
-.chip{font-size:.78rem;padding:.2rem .65rem;border-radius:999px;background:var(--beige);color:#2a2b1c;border:1px solid var(--sage)}
-.chip.b{background:var(--bronze);border-color:var(--bronze)}
-.job ul{margin:0;padding:0;list-style:none;display:grid;gap:14px}
-.job li{position:relative;padding-inline-start:22px;color:var(--muted)}
-.job li::before{content:"";position:absolute;inset-inline-start:0;top:.62em;width:8px;height:8px;border-radius:2px;background:var(--bronze)}
-/* flow */
-.flow{display:flex;align-items:stretch}
-.node{flex:1 1 0;min-width:0;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 14px;animation:glow 7s infinite;animation-delay:calc(var(--i)*1s)}
-.node b{display:block;font-family:var(--ff-d);font-size:1rem}
-.node small{display:block;font-family:var(--ff-m);font-size:.72rem;color:var(--muted);margin-top:.3rem;direction:ltr;text-align:start}
-@keyframes glow{0%,14%{border-color:var(--bronze);box-shadow:0 0 0 4px color-mix(in srgb,var(--bronze) 28%,transparent)}22%,100%{border-color:var(--line);box-shadow:none}}
-.wire{flex:0 0 44px;position:relative;align-self:center;height:2px;background:repeating-linear-gradient(90deg,var(--line) 0 6px,transparent 6px 10px)}
-.wire::after{content:"";position:absolute;top:-3px;left:0;width:8px;height:8px;border-radius:50%;background:var(--accent);animation:tx 2.4s linear infinite;animation-delay:var(--d)}
-@keyframes tx{0%{left:0;opacity:0}15%,85%{opacity:1}100%{left:calc(100% - 8px);opacity:0}}
-@keyframes ty{0%{top:0;opacity:0}15%,85%{opacity:1}100%{top:calc(100% - 8px);opacity:0}}
-.ticker{margin-top:22px;background:var(--code-bg);color:var(--c-st);border-radius:12px;overflow:hidden;padding:10px 0;font-family:var(--ff-m);font-size:.78rem;direction:ltr}
-.ticker .row{animation-duration:48s}
-.ticker .row span{all:unset;padding-inline:1.4rem;white-space:nowrap}
-.ticker .row span::after{content:"•";margin-inline-start:2.8rem;color:var(--bronze)}
-/* companies, projects */
-.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
-.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px;box-shadow:var(--shadow);transition:transform .25s}
-.card:hover{transform:translateY(-4px)}
-.card h3{font-size:1.35rem;margin:.9rem 0 .4rem;letter-spacing:var(--ls)}
-.card p{margin:0;color:var(--muted);font-size:.95rem}
-.logo{width:48px;height:48px;border-radius:12px;display:grid;place-items:center;font-family:var(--ff-d);font-weight:800;font-size:1.2rem;color:#2a2b1c;background:var(--sage)}
-.logo.p{background:var(--papaya)}.logo.b{background:var(--bronze)}
-.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:1rem;direction:ltr}
-.tags span{font-family:var(--ff-m);font-size:.72rem;padding:.2rem .6rem;border-radius:6px;border:1px solid var(--line);color:var(--accent)}
-/* skills */
-.skills{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px 32px}
-.skills h3{font-size:1rem;margin-bottom:.7rem;color:var(--accent)}
-.skills .tags{margin-top:0}
-.skills .tags span{color:var(--ink);background:var(--card)}
-/* contact */
-.contact{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,5vw,64px);align-items:start}
-.crow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:16px 0;border-bottom:1px solid var(--line)}
-.crow .k{flex:0 0 72px;font-size:.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
-.crow .v{flex:1 1 180px;min-width:0;font-family:var(--ff-m);font-size:.95rem;overflow-wrap:anywhere;direction:ltr;text-align:start;user-select:all}
-.cp{font:inherit;font-size:.8rem;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:.3rem .8rem;cursor:pointer}
-.cp.done{background:var(--sage);color:#2a2b1c}
-.cp:not(.done) .l2,.cp.done .l1{display:none}
-.links{display:flex;gap:12px;flex-wrap:wrap;margin-top:1.4rem}
-footer{padding-block:28px 40px;border-top:1px solid var(--line);color:var(--muted);font-size:.85rem}
-.reveal{opacity:.45;transform:translateY(18px);transition:opacity .7s,transform .7s}
-.reveal.in{opacity:1;transform:none}
-@media (max-width:900px){
-  .hero-grid,.about,.contact{grid-template-columns:minmax(0,1fr)}
-  .grid4{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .grid3,.skills{grid-template-columns:minmax(0,1fr)}
-  .job{grid-template-columns:minmax(0,1fr)}
-  .flow{flex-direction:column}
-  .wire{flex:0 0 34px;width:2px;height:auto;align-self:center;background:repeating-linear-gradient(180deg,var(--line) 0 6px,transparent 6px 10px)}
-  .wire::after{top:0;left:-3px;animation-name:ty}
-  .menu{display:grid}
-  .nav{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;gap:0;background:var(--bg);border-bottom:1px solid var(--line);padding:8px max(16px,env(safe-area-inset-left,0px))}
-  .nav.open{display:flex}
-  .nav a{padding:12px 0;font-size:1rem}
-}
-@media (max-width:560px){
-  .grid2{grid-template-columns:minmax(0,1fr)}
-  .resume-top{font-size:.76rem;padding:.48rem .62rem}
-}
-@media (prefers-reduced-motion:reduce){
-  *,*::before,*::after{animation:none!important;transition:none!important}
-  html{scroll-behavior:auto}
-  .reveal{opacity:1;transform:none}
-}
-</style>
-<header class="hdr"><div class="wrap bar">
-  <a class="brand" href="#top" aria-label="Kartikey Udainiya">KU</a>
-  <nav class="nav" id="nav">
-    <a href="#about" data-i="n_about">About</a>
-    <a href="#impact" data-i="n_impact">Impact</a>
-    <a href="#experience" data-i="n_exp">Experience</a>
-    <a href="#companies" data-i="n_comp">Companies</a>
-    <a href="#projects" data-i="n_proj">Projects</a>
-    <a href="#contact" data-i="n_contact">Contact</a>
-  </nav>
-  <div class="tools">
-    <a class="btn pri resume-top" href="https://drive.google.com/file/d/1AZjmxoNQSclGPS00kyY3m5lhIfVk0R2f/view?usp=sharing" target="_blank" rel="noopener noreferrer" aria-label="View resume">View Resume <span aria-hidden="true">&nearr;</span></a>
-    <select id="lang" aria-label="Language"></select>
-    <button class="ibtn" id="theme" aria-label="Theme" type="button">&#9680;</button>
-    <button class="ibtn menu" id="menu" aria-label="Menu" aria-expanded="false" type="button">&#9776;</button>
-  </div>
-</div></header>
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+    <style>
+      :root {
+        color-scheme: light;
+        box-sizing: border-box;
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+      }
+      html {
+        scroll-padding-top: env(safe-area-inset-top, 0px);
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        font:
+          14px -apple-system,
+          BlinkMacSystemFont,
+          sans-serif;
+        background: #fff;
+        color: #000;
+      }
+      img {
+        max-width: 100%;
+      }
+      [hidden]:not([hidden="until-found" i]) {
+        display: none !important;
+      }
+    </style>
+  </head>
+  <body>
+    <title>Kartikey Udainiya</title>
+    <meta name="claude:viewport-fit-sides" content="cover" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@200;300;400;500&family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+    />
+    <style>
+      /* Obsidian Future: single dark look. Layout: fixed 3D stage behind alternating editorial columns. */
+      :root {
+        color-scheme: dark;
+        --bg: #08090d;
+        --bg2: #11141c;
+        --surface: #191e29;
+        --silver: #c7ced8;
+        --blue: #789bff;
+        --cyan: #56d6e8;
+        --text: #f4f6fa;
+        --muted: #9da6b5;
+        --line: rgba(199, 206, 216, 0.15);
+        --glass: rgba(17, 20, 28, 0.74);
+        --display: Sora, "Segoe UI", sans-serif;
+        --body: Manrope, "Segoe UI", sans-serif;
+        --mono: "IBM Plex Mono", ui-monospace, monospace;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font: 400 16px/1.7 var(--body);
+        overflow-x: hidden;
+      }
+      #stage {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        background: radial-gradient(70% 60% at 70% 40%, #131a2c 0, var(--bg) 70%);
+      }
+      #stage canvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+        transition: opacity 0.5s;
+      }
+      #tags {
+        position: fixed;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+        overflow: hidden;
+      }
+      .tag {
+        position: absolute;
+        left: 0;
+        top: 0;
+        font: 500 11px var(--mono);
+        color: var(--silver);
+        background: rgba(8, 9, 13, 0.72);
+        border: 1px solid var(--line);
+        padding: 3px 9px;
+        border-radius: 99px;
+        white-space: nowrap;
+        opacity: 0;
+      }
+      .tag.on {
+        color: var(--bg);
+        background: var(--cyan);
+      }
+      header {
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: 0;
+        z-index: 20;
+        padding-top: calc(env(safe-area-inset-top, 0px) + 14px);
+        padding-bottom: 14px;
+        padding-left: max(20px, env(safe-area-inset-left, 0px));
+        padding-right: max(20px, env(safe-area-inset-right, 0px));
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        background: linear-gradient(var(--bg) 65%, rgba(8, 9, 13, 0));
+      }
+      .brand {
+        font: 500 15px var(--display);
+        color: var(--text);
+        text-decoration: none;
+        white-space: nowrap;
+      }
+      nav {
+        display: flex;
+        gap: 4px;
+      }
+      nav a {
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+        padding: 6px 12px;
+        border-radius: 99px;
+      }
+      nav a:hover {
+        color: var(--text);
+      }
+      nav a[aria-current] {
+        color: var(--text);
+        background: var(--surface);
+      }
+      #progress {
+        position: fixed;
+        left: 0;
+        top: env(safe-area-inset-top, 0px);
+        height: 2px;
+        width: 100%;
+        transform-origin: left;
+        transform: scaleX(0);
+        background: linear-gradient(90deg, var(--blue), var(--cyan));
+        z-index: 21;
+      }
+      main,
+      footer {
+        position: relative;
+        z-index: 2;
+      }
+      .wrap {
+        max-width: 1240px;
+        margin: 0 auto;
+        padding-left: max(20px, env(safe-area-inset-left, 0px));
+        padding-right: max(20px, env(safe-area-inset-right, 0px));
+      }
+      section.scene {
+        min-height: 100vh;
+        padding-block: 130px 90px;
+      }
+      .col {
+        max-width: 540px;
+        min-width: 0;
+      }
+      .right {
+        margin-left: auto;
+      }
+      .veil {
+        position: relative;
+        isolation: isolate;
+      }
+      .veil:before {
+        content: "";
+        position: absolute;
+        inset: -60px -90px;
+        z-index: -1;
+        background: radial-gradient(closest-side, rgba(8, 9, 13, 0.88) 45%, rgba(8, 9, 13, 0));
+      }
+      h1,
+      h2,
+      h3,
+      h4 {
+        font-family: var(--display);
+        font-weight: 300;
+        line-height: 1.12;
+        margin: 0;
+        text-wrap: balance;
+        letter-spacing: -0.02em;
+      }
+      h1 {
+        font-size: clamp(44px, 7.4vw, 104px);
+        font-weight: 200;
+        letter-spacing: -0.045em;
+        line-height: 1;
+      }
+      h1 span {
+        display: block;
+        background: linear-gradient(
+          100deg,
+          #fff 10%,
+          var(--silver) 40%,
+          #6f7886 55%,
+          #fff 75%,
+          var(--blue)
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        padding-bottom: 0.06em;
+      }
+      h2 {
+        font-size: clamp(32px, 4.2vw, 54px);
+        margin-bottom: 22px;
+      }
+      h3 {
+        font-size: 22px;
+        font-weight: 400;
+      }
+      h4 {
+        font-size: 15px;
+        font-weight: 500;
+        letter-spacing: 0;
+      }
+      p {
+        margin: 0 0 16px;
+        max-width: 62ch;
+      }
+      .muted {
+        color: var(--muted);
+      }
+      .kicker {
+        font: 500 12px var(--mono);
+        color: var(--cyan);
+        margin-bottom: 16px;
+      }
+      .lede {
+        font-size: 18px;
+        color: var(--silver);
+        max-width: 46ch;
+      }
+      .btns {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 28px;
+      }
+      .btn {
+        font: 600 14px var(--body);
+        cursor: pointer;
+        color: var(--text);
+        background: rgba(25, 30, 41, 0.8);
+        border: 1px solid var(--line);
+        border-radius: 99px;
+        padding: 12px 22px;
+        text-decoration: none;
+        transition:
+          border-color 0.2s,
+          transform 0.2s;
+      }
+      .btn:hover {
+        border-color: var(--blue);
+        transform: translateY(-1px);
+      }
+      .btn.primary {
+        background: linear-gradient(180deg, #fff, #b9c2d0);
+        color: #0a0c12;
+        border-color: transparent;
+      }
+      :focus-visible {
+        outline: 2px solid var(--cyan);
+        outline-offset: 3px;
+      }
+      #hero {
+        display: flex;
+        align-items: center;
+      }
+      #hero > .wrap {
+        width: 100%;
+      }
+      .role {
+        font: 300 clamp(18px, 2vw, 24px) var(--display);
+        color: var(--silver);
+        margin: 22px 0 14px;
+      }
+      .facts {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1px;
+        background: var(--line);
+        border: 1px solid var(--line);
+        margin-top: 30px;
+      }
+      .facts div {
+        background: var(--glass);
+        padding: 18px;
+      }
+      .facts b {
+        display: block;
+        font: 300 30px/1.2 var(--display);
+        font-variant-numeric: tabular-nums;
+      }
+      .facts span {
+        font-size: 13px;
+        color: var(--muted);
+        display: block;
+        line-height: 1.5;
+      }
+      .skill {
+        display: block;
+        width: 100%;
+        text-align: left;
+        background: none;
+        border: 0;
+        border-top: 1px solid var(--line);
+        color: inherit;
+        font: inherit;
+        padding: 15px 0;
+        cursor: default;
+      }
+      .skill h4 {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .skill h4:before {
+        content: "";
+        width: 7px;
+        height: 7px;
+        transform: rotate(45deg);
+        background: var(--silver);
+      }
+      .skill:hover h4:before,
+      .skill:focus h4:before {
+        background: var(--cyan);
+        box-shadow: 0 0 12px var(--cyan);
+      }
+      .skill span {
+        display: block;
+        font-size: 14px;
+        color: var(--muted);
+        margin-top: 4px;
+      }
+      /* case study */
+      .sheet {
+        background: var(--glass);
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        padding: clamp(18px, 3vw, 36px);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+      }
+      #case {
+        margin-top: 10vh;
+        margin-bottom: 14vh;
+      }
+      .two {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 28px;
+      }
+      .three {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 24px;
+      }
+      .pipe {
+        display: flex;
+        align-items: stretch;
+        margin: 26px 0 8px;
+        overflow-x: auto;
+        padding-bottom: 6px;
+      }
+      .pipe .step {
+        flex: 1 0 135px;
+        border: 1px solid var(--line);
+        background: var(--bg2);
+        padding: 12px;
+        font-size: 13px;
+        line-height: 1.45;
+        color: var(--muted);
+      }
+      .pipe .step b {
+        display: block;
+        color: var(--text);
+        font-size: 13.5px;
+        margin-bottom: 3px;
+      }
+      .pipe i {
+        flex: 0 0 28px;
+        align-self: center;
+        height: 2px;
+        background: repeating-linear-gradient(90deg, var(--cyan) 0 6px, transparent 6px 12px);
+        animation: flow 0.8s linear infinite;
+      }
+      @keyframes flow {
+        to {
+          background-position: 12px 0;
+        }
+      }
+      .demo {
+        margin-top: 30px;
+        border-top: 1px solid var(--line);
+        padding-top: 24px;
+      }
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 10px 0;
+      }
+      .chip {
+        font: 600 13px var(--body);
+        color: var(--silver);
+        background: transparent;
+        border: 1px solid var(--line);
+        border-radius: 99px;
+        padding: 8px 14px;
+        cursor: pointer;
+      }
+      .chip[aria-pressed="true"] {
+        background: var(--blue);
+        color: #080a12;
+        border-color: var(--blue);
+      }
+      #results {
+        list-style: none;
+        margin: 16px 0 0;
+        padding: 0;
+        display: grid;
+        gap: 8px;
+      }
+      #results li {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 6px 16px;
+        padding: 12px 14px;
+        border: 1px solid var(--line);
+        background: var(--bg2);
+        font-size: 14px;
+        transition:
+          opacity 0.3s,
+          border-color 0.3s;
+      }
+      #results li.miss {
+        opacity: 0.62;
+        background: transparent;
+        border-style: dashed;
+      }
+      #results li.hit {
+        border-color: rgba(86, 214, 232, 0.55);
+      }
+      #results small {
+        font: 500 11px var(--mono);
+        color: var(--cyan);
+        align-self: center;
+      }
+      #results .miss small {
+        color: var(--muted);
+      }
+      .count {
+        font: 500 13px var(--mono);
+        color: var(--silver);
+        margin-top: 12px;
+      }
+      /* shipped projects */
+      .shipped article {
+        border-top: 1px solid var(--line);
+        padding-top: 20px;
+      }
+      .stack {
+        font: 400 12px/1.8 var(--mono);
+        color: var(--blue);
+      }
+      /* labs */
+      .lab {
+        min-height: 92vh;
+        display: flex;
+        align-items: center;
+      }
+      .lab .col {
+        max-width: 500px;
+      }
+      .lab h3 {
+        font-size: clamp(40px, 5.4vw, 74px);
+        font-weight: 200;
+        letter-spacing: -0.045em;
+        line-height: 1;
+        margin: 14px 0 18px;
+        overflow-wrap: anywhere;
+      }
+      .badge {
+        display: inline-block;
+        font: 500 11px var(--mono);
+        border: 1px solid rgba(86, 214, 232, 0.5);
+        color: var(--cyan);
+        border-radius: 99px;
+        padding: 4px 11px;
+        background: rgba(8, 9, 13, 0.65);
+      }
+      .lab details {
+        margin-top: 18px;
+        border-top: 1px solid var(--line);
+        padding-top: 12px;
+      }
+      summary {
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 14px;
+      }
+      .lab ul,
+      #detail ul {
+        padding-left: 18px;
+        margin: 10px 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+      /* experience */
+      .job {
+        border-left: 1px solid var(--line);
+        padding: 0 0 12px 22px;
+        position: relative;
+      }
+      .job:before {
+        content: "";
+        position: absolute;
+        left: -5px;
+        top: 9px;
+        width: 9px;
+        height: 9px;
+        transform: rotate(45deg);
+        background: var(--blue);
+      }
+      .job ul {
+        list-style: none;
+        padding: 0;
+        margin: 18px 0;
+      }
+      .job li {
+        border-top: 1px solid var(--line);
+        padding: 13px 0;
+        font-size: 14.5px;
+        color: var(--muted);
+      }
+      .job li b {
+        display: block;
+        color: var(--text);
+        font-weight: 600;
+      }
+      #contact {
+        display: flex;
+        align-items: flex-end;
+        text-align: center;
+        padding-bottom: 50px;
+      }
+      #contact > .wrap {
+        width: 100%;
+      }
+      #contact h2 {
+        font-size: clamp(36px, 6vw, 76px);
+        font-weight: 200;
+      }
+      #contact p {
+        margin-left: auto;
+        margin-right: auto;
+      }
+      #contact .btns {
+        justify-content: center;
+      }
+      .mail {
+        font: 400 clamp(14px, 3.6vw, 20px) var(--mono);
+        user-select: all;
+        overflow-wrap: anywhere;
+      }
+      footer {
+        font-size: 13px;
+        color: var(--muted);
+        border-top: 1px solid var(--line);
+        padding-block: 20px;
+        background: var(--bg);
+      }
+      /* detail view */
+      #detail {
+        position: fixed;
+        inset: 0;
+        z-index: 40;
+        background: radial-gradient(80% 60% at 80% 0, #17203a, var(--bg) 65%);
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        animation: open 0.55s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+      @keyframes open {
+        from {
+          clip-path: inset(48% 20% 48% 20%);
+          opacity: 0.3;
+        }
+        to {
+          clip-path: inset(0);
+          opacity: 1;
+        }
+      }
+      #detail .wrap {
+        padding-block: 24px 80px;
+        max-width: 1080px;
+      }
+      .dbar {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 46px;
+      }
+      #detail h2 {
+        font-size: clamp(44px, 8vw, 100px);
+        font-weight: 200;
+        letter-spacing: -0.045em;
+        margin: 14px 0;
+      }
+      #detail section {
+        border-top: 1px solid var(--line);
+        padding-top: 28px;
+        margin-top: 40px;
+      }
+      #detail section > h3 {
+        margin-bottom: 18px;
+      }
+      .arch {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px 0;
+      }
+      .arch button {
+        flex: 1 1 120px;
+        min-width: 0;
+        background: var(--bg2);
+        border: 1px solid var(--line);
+        color: var(--silver);
+        font: 600 13px/1.4 var(--body);
+        padding: 20px 10px;
+        cursor: pointer;
+      }
+      .arch button[aria-pressed="true"] {
+        border-color: var(--cyan);
+        color: var(--text);
+        box-shadow: 0 0 24px rgba(86, 214, 232, 0.2) inset;
+      }
+      .arch i {
+        flex: 0 0 24px;
+        align-self: center;
+        height: 2px;
+        background: repeating-linear-gradient(90deg, var(--cyan) 0 6px, transparent 6px 12px);
+        animation: flow 0.8s linear infinite;
+      }
+      .explain {
+        margin-top: 16px;
+        padding: 18px;
+        background: var(--glass);
+        border: 1px solid var(--line);
+        min-height: 96px;
+        color: var(--silver);
+      }
+      #detail details {
+        border-top: 1px solid var(--line);
+        padding: 14px 0;
+      }
+      #detail details p {
+        color: var(--muted);
+        margin: 10px 0 0;
+      }
+      @media (max-width: 900px) {
+        nav a {
+          padding: 5px 7px;
+          font-size: 12px;
+        }
+        nav a.opt {
+          display: none;
+        }
+        .two,
+        .three {
+          grid-template-columns: minmax(0, 1fr);
+        }
+        section.scene {
+          padding-block: 44vh 70px;
+        }
+        #hero {
+          align-items: flex-end;
+          padding-block: 40vh 50px;
+        }
+        #projects.scene {
+          padding-top: 90px;
+        }
+        .col,
+        .right {
+          max-width: 600px;
+          margin-left: 0;
+        }
+        .veil:before {
+          inset: -60px -30px;
+          background: linear-gradient(
+            transparent,
+            rgba(8, 9, 13, 0.84) 60px,
+            rgba(8, 9, 13, 0.84) calc(100% - 60px),
+            transparent
+          );
+        }
+        .lab {
+          min-height: 100vh;
+          align-items: flex-end;
+          padding-bottom: 50px;
+        }
+        .arch {
+          flex-direction: column;
+          gap: 0;
+        }
+        .arch button {
+          flex: none;
+          padding: 14px;
+        }
+        .arch i {
+          flex: 0 0 18px;
+          width: 2px;
+          height: 18px;
+          background: var(--cyan);
+          animation: none;
+        }
+        #contact {
+          padding-top: 55vh;
+        }
+      }
+      @media (max-width: 480px) {
+        .brand {
+          font-size: 0;
+        }
+        .brand:after {
+          content: "KU";
+          font-size: 15px;
+        }
+        .facts b {
+          font-size: 24px;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+        *,
+        *:before,
+        *:after {
+          animation: none !important;
+          transition: none !important;
+        }
+      }
+    </style>
+    <div id="stage" aria-hidden="true"></div>
+    <div id="tags" aria-hidden="true"></div>
+    <div id="progress"></div>
+    <header>
+      <a class="brand" href="#hero" data-go="hero" aria-label="Kartikey Udainiya, back to top"
+        >Kartikey Udainiya</a
+      >
+      <nav aria-label="Sections">
+        <a href="https://drive.google.com/file/d/1AZjmxoNQSclGPS00kyY3m5lhIfVk0R2f/view?usp=sharing" class="opt">Resume</a
+          >
+        <a href="#about" data-go="about" class="opt">About</a
+        ><a href="#skills" data-go="skills">Skills</a><a href="#projects" data-go="projects">Work</a
+        ><a href="#labs" data-go="labs">AI Labs</a
+        ><a href="#experience" data-go="experience" class="opt">Experience</a
+        ><a href="#contact" data-go="contact">Contact</a>
+      </nav>
+    </header>
+    <main>
+      <section class="scene" id="hero" data-state="0">
+        <div class="wrap">
+          <div class="col veil" style="max-width: 640px">
+            <h1><span>Kartikey</span><span>Udainiya</span></h1>
+            <div class="role">Lead Software Engineer at Centralogic</div>
+            <p class="lede">
+              I build backend systems and AI retrieval pipelines with Node.js, TypeScript,
+              PostgreSQL and OpenSearch. Based in Pune, India.
+            </p>
+            <div class="btns">
+              <a class="btn primary" href="#projects" data-go="projects">See my hardest problem</a
+              ><a class="btn" href="#contact" data-go="contact">Contact me</a>
+            </div>
+          </div>
+        </div>
+      </section>
 
-<main id="top">
-<section class="hero" id="hero"><div class="wrap hero-grid">
-  <div>
-    <div class="eyebrow"><i class="dot"></i>Pune, India</div>
-    <p class="hello" data-i="h_greet">Hello, I'm</p>
-    <h1 class="name"><span class="ln"><span>Kartikey</span></span><span class="ln"><span>Udainiya</span></span></h1>
-    <p class="role" data-i="h_role">Lead Software Engineer</p>
-    <p class="rot">// <b id="rot">Node.js</b></p>
-    <p class="tag" data-i="h_tag">I design backend systems, AI search and data pipelines that stay fast at scale.</p>
-    <div class="cta">
-      <a class="btn pri" href="#impact"><span data-i="h_cta1">See the impact</span><span class="arr">&rarr;</span></a>
-      <a class="btn" href="#contact" data-i="h_cta2">Get in touch</a>
-    </div>
-  </div>
-  <div class="editor" aria-label="Code editor animation">
-    <div class="ebar"><i></i><i></i><i></i><span>kartikey/tech-stack.ts</span></div>
-    <pre class="code" id="code"></pre>
-    <div class="term" id="term"></div>
-  </div>
-</div></section>
+      <section class="scene" id="about" data-state="1">
+        <div class="wrap">
+          <div class="col veil">
+            <h2>The systems under the surface</h2>
+            <p class="lede">My work sits where APIs, data and AI meet.</p>
+            <p class="muted">
+              At Centralogic I architected and maintained an AI orchestration platform for agent and
+              employee Net Promoter Score (aNPS and eNPS) surveys, built semantic search on it, and
+              led a .NET to Node.js migration. Before that, at Orrizonte Technologies, I worked on a
+              health-tech platform and its notification service.
+            </p>
+            <div class="facts">
+              <div>
+                <b>9,000 → 15 ms</b
+                ><span>API latency on a health-tech platform after Redis caching work</span>
+              </div>
+              <div><b>30%</b><span>Lower database load on the same platform</span></div>
+              <div>
+                <b>134 / 139</b
+                ><span
+                  >Routes at API parity in a .NET to Node.js migration I led, in under 4
+                  months</span
+                >
+              </div>
+              <div>
+                <b>1M+</b
+                ><span>Records handled by that health-tech platform, across 30+ REST APIs</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-<div class="marq" aria-hidden="true">
-  <div class="row"><span>Node.js</span><span>TypeScript</span><span>PostgreSQL</span><span>Redis</span><span>BullMQ</span><span>OpenSearch</span><span>Fastify</span><span>Express</span><span>Prisma</span><span>React</span><span>Docker</span><span>Azure</span><span>AWS</span><span>Kafka</span><span>Okta</span></div>
-  <div class="row rev"><span>Microservices</span><span>Event-Driven</span><span>Multi-Tenant SaaS</span><span>System Design</span><span>RBAC</span><span>REST APIs</span><span>Row-Level Security</span><span>Vector Search</span><span>HNSW</span><span>BM25</span><span>JWT</span><span>OAuth 2.0</span><span>Monorepos</span><span>Turborepo</span><span>Vitest</span></div>
-</div>
+      <section class="scene" id="skills" data-state="2">
+        <div class="wrap">
+          <div class="col veil" id="skillList">
+            <h2>Six disciplines, one system</h2>
+          </div>
+        </div>
+      </section>
 
-<section id="about"><div class="wrap about">
-  <div class="mono reveal" aria-hidden="true">
-    <svg class="ring" viewBox="0 0 200 200"><defs><path id="circ" d="M100,100 m-82,0 a82,82 0 1,1 164,0 a82,82 0 1,1 -164,0"/></defs><text><textPath href="#circ" textLength="510" lengthAdjust="spacing">NODE.JS • TYPESCRIPT • POSTGRESQL • BULLMQ • OPENSEARCH • REDIS • </textPath></text></svg>
-    <div class="core">KU</div>
-  </div>
-  <div class="reveal">
-    <span class="kicker">&lt;about /&gt;</span>
-    <h2 data-i="a_title">About</h2>
-    <p data-i="a_text">I'm a Lead Software Engineer based in Pune, building enterprise platforms with Node.js, TypeScript and PostgreSQL. My work spans AI-powered semantic search, distributed job pipelines and secure multi-tenant APIs.</p>
-    <p data-i="a_text2">I like systems that are measurable: lower latency, fewer moving parts, cleaner architecture. Most recently I led the migration of a 25K-line .NET service to Node.js in under four months.</p>
-  </div>
-</div></section>
+      <section class="scene" id="projects" data-state="3">
+        <div class="wrap" id="case" data-focus="-1">
+          <article class="sheet">
+            <div class="kicker">Professional work · The most challenging problem I have solved</div>
+            <h2>Finding the feedback that keywords miss</h2>
+            <p class="lede">
+              AI orchestration for a survey portal built for eXp, a US real estate company.
+            </p>
+            <div class="three" style="margin-top: 28px">
+              <div>
+                <h4>Context</h4>
+                <p class="muted">
+                  The orchestration layer summarised feedback from both Agent and Employee surveys.
+                  I managed it.
+                </p>
+              </div>
+              <div>
+                <h4>Problem</h4>
+                <p class="muted">
+                  A useful summary depends on retrieving the relevant feedback. People often express
+                  the same idea in different words, so keyword search alone can miss it.
+                </p>
+              </div>
+              <div>
+                <h4>Solution</h4>
+                <p class="muted">
+                  I used hybrid search, combining BM25 keyword ranking with vector retrieval on
+                  OpenSearch k-NN/HNSW. Using both improves retrieval coverage.
+                </p>
+              </div>
+            </div>
+            <div
+              class="pipe"
+              role="img"
+              aria-label="Flow: agent and employee survey feedback is embedded and indexed, searched with both BM25 and vector retrieval, and the relevant feedback is summarised"
+            >
+              <div class="step"><b>Survey feedback</b>Agent and Employee surveys</div>
+              <i></i>
+              <div class="step"><b>Embeddings</b>text-embedding-3-small, 1,536 dimensions</div>
+              <i></i>
+              <div class="step"><b>OpenSearch</b>Text index and k-NN/HNSW vectors</div>
+              <i></i>
+              <div class="step"><b>Hybrid retrieval</b>BM25 + vector similarity</div>
+              <i></i>
+              <div class="step"><b>Summary</b>Built from relevant feedback</div>
+            </div>
+            <p class="muted" style="font-size: 14px">
+              The platform used Node.js, Express, TypeScript, Prisma and PostgreSQL. Its 36 route
+              files followed a controller, service and repository structure. The search engine also
+              clustered up to 2,500 vectors per clustering operation.
+            </p>
+            <div class="demo">
+              <h3>Why use both?</h3>
+              <p class="muted" style="font-size: 14px; margin-top: 8px">
+                Illustration with made-up feedback, not client data. Keyword matches are computed
+                here by exact word overlap, a simplification of BM25. Vector matches are
+                hand-labelled to show the idea. No model or OpenSearch is running. The first two
+                queries show keyword search missing paraphrases. The VPN query assumes the reverse
+                case, where vector search misses a short comment containing an exact term.
+              </p>
+              <div class="chips" id="queries" role="group" aria-label="Sample query"></div>
+              <div class="chips" id="modes" role="group" aria-label="Retrieval method"></div>
+              <ul id="results"></ul>
+              <div class="count" id="count" aria-live="polite"></div>
+            </div>
+          </article>
+        </div>
 
-<section id="impact" class="alt"><div class="wrap">
-  <span class="kicker">&lt;impact /&gt;</span>
-  <h2 data-i="i_title">Impact in numbers</h2>
-  <p class="sub" data-i="i_sub">Figures from production systems I built and maintained.</p>
-  <div class="grid4">
-    <div class="m reveal"><span class="num" data-to="99.8" data-dec="1" data-suf="%">99.8%</span><p data-i="m1">API latency reduction (9,000 ms to 15 ms)</p></div>
-    <div class="m reveal"><span class="num" data-to="96" data-suf="%">96%</span><p data-i="m2">API parity in the .NET to Node.js migration (134 of 139 routes)</p></div>
-    <div class="m reveal"><span class="num" data-to="150" data-suf="+">150+</span><p data-i="m3">Colleges served by the Learning Module</p></div>
-    <div class="m reveal"><span class="num" data-to="1" data-suf="M+">1M+</span><p data-i="m4">Records handled by the health-tech platform</p></div>
-    <div class="m reveal"><span class="num" data-to="29">29</span><p data-i="m5">REST APIs in the Learning Module microservice</p></div>
-    <div class="m reveal"><span class="num" data-to="11">11</span><p data-i="m6">Materialized views refreshed every 15 minutes</p></div>
-    <div class="m reveal"><span class="num" data-to="25" data-suf="K">25K</span><p data-i="m7">Lines of .NET code migrated</p></div>
-    <div class="m reveal"><span class="num" data-to="30" data-suf="%">30%</span><p data-i="m8">Database load reduction from Redis caching</p></div>
-  </div>
-</div></section>
+        <div class="wrap shipped" data-focus="-1" style="margin-bottom: 12vh">
+          <div class="sheet">
+            <h2>More projects</h2>
+            <p class="muted">Projects listed on my resume.</p>
+            <div class="two" style="margin-top: 22px">
+              <article>
+                <h3>Zerodha Trading AI Assistant</h3>
+                <p class="muted" style="margin-top: 10px">
+                  AI-powered trading workflows with real-time market data, natural-language intent
+                  detection and order execution through Claude AI and the Kite Connect APIs.
+                </p>
+                <div class="stack">Node.js · Claude AI · Kite Connect SDK</div>
+              </article>
+              <article>
+                <h3>ReelEstate</h3>
+                <p class="muted" style="margin-top: 10px">
+                  A real estate reels platform with property discovery, video streaming, advanced
+                  filtering and bookmarks. It covers 1,000+ property listings, 500 MB video uploads
+                  and under 150 ms API latency.
+                </p>
+                <div class="stack">React Native · Node.js · TypeScript · MongoDB · AWS S3</div>
+              </article>
+            </div>
+          </div>
+        </div>
 
-<section id="experience"><div class="wrap">
-  <span class="kicker">&lt;experience /&gt;</span>
-  <h2 data-i="e_title">Experience</h2>
-  <div class="job reveal">
-    <div>
-      <h3>Centralogic</h3>
-      <div class="when">02/2026 &ndash; <span data-i="e_now">Present</span></div>
-      <div class="chips"><span class="chip b" data-i="e_lead">Lead Software Engineer</span><span class="chip">08/2026 &ndash;</span><span class="chip" data-i="e_se">Software Engineer</span><span class="chip">02/2026 &ndash; 08/2026</span></div>
-    </div>
-    <ul>
-      <li data-i="cl1">Architected an enterprise AI orchestration platform with Node.js, Express, TypeScript, Prisma and PostgreSQL, using a controller-service-repository structure across 36 route files.</li>
-      <li data-i="cl2">Built AI semantic search with OpenAI embeddings (1,536 dimensions) and OpenSearch k-NN/HNSW, with hybrid vector + BM25 search and clustering of up to 2,500 vectors.</li>
-      <li data-i="cl3">Led the migration of a 25K-line .NET admin service to Node.js/Express 5/TypeScript: 96% API parity (134 of 139 routes) in under 4 months.</li>
-      <li data-i="cl4">Built a Fastify 5 Learning Module microservice with 29 REST APIs for 150+ colleges, and designed a Document AI pipeline with BullMQ and Redis.</li>
-      <li data-i="cl5">Designed security with Okta JWT/JWKS, 4 RBAC groups and hierarchy-based row-level access, and built 11 materialized views refreshed every 15 minutes.</li>
-      <li data-i="cl6">Automated real-estate transaction sync with SkySlope: 5-minute polling, 3-hour office sync, repeatable BullMQ jobs and human-in-the-loop verification.</li>
-    </ul>
-  </div>
-  <div class="job reveal">
-    <div>
-      <h3>Orrizonte Technologies</h3>
-      <div class="when">06/2024 &ndash; 03/2025 &middot; India</div>
-      <div class="chips"><span class="chip" data-i="e_se">Software Engineer</span></div>
-    </div>
-    <ul>
-      <li data-i="or1">Built a health-tech platform with 1M+ records and 30+ REST APIs; Redis caching cut database load by 30% and API latency by 99.8% (9,000 ms to 15 ms).</li>
-      <li data-i="or2">Architected a distributed notification service with BullMQ and Redis: asynchronous jobs, concurrent workers and automatic retries.</li>
-      <li data-i="or3">Implemented JWT-based authentication and authorization to protect the APIs.</li>
-    </ul>
-  </div>
-</div></section>
+        <div id="labs">
+          <div class="wrap" data-focus="-1" style="padding-top: 60px">
+            <div class="col veil">
+              <h2>AI Projects</h2>
+              <p class="lede">Six Projects that explore how I approach AI systems.</p>
+            
+            </div>
+          </div>
+        </div>
+      </section>
 
-<section id="systems" class="alt"><div class="wrap">
-  <span class="kicker">&lt;request-path /&gt;</span>
-  <h2 data-i="s_title">How a request travels</h2>
-  <p class="sub" data-i="s_sub">The shape of the systems I build, from client to database.</p>
-  <div class="flow reveal" aria-hidden="true">
-    <div class="node" style="--i:0"><b>Client</b><small>React &middot; REST</small></div><div class="wire" style="--d:0s"></div>
-    <div class="node" style="--i:1"><b>API</b><small>Fastify &middot; Express</small></div><div class="wire" style="--d:.5s"></div>
-    <div class="node" style="--i:2"><b>Auth</b><small>Okta JWT &middot; RBAC</small></div><div class="wire" style="--d:1s"></div>
-    <div class="node" style="--i:3"><b>Queue</b><small>BullMQ &middot; Redis</small></div><div class="wire" style="--d:1.5s"></div>
-    <div class="node" style="--i:4"><b>Workers</b><small>Node.js &middot; TypeScript</small></div><div class="wire" style="--d:2s"></div>
-    <div class="node" style="--i:5"><b>Data</b><small>PostgreSQL &middot; OpenSearch</small></div>
-  </div>
-  <div class="ticker" aria-hidden="true"><div class="row"><span>200 GET /api/nps/summary 14ms</span><span>job document.classify completed</span><span>201 POST /api/learning/courses 22ms</span><span>refresh mv_mtd_analytics ok</span><span>sync skyslope offices done</span><span>200 GET /api/search?q=survey 31ms</span></div></div>
-</div></section>
+      <section class="scene" id="experience" data-state="4">
+        <div class="wrap">
+          <div class="col veil" style="max-width: 600px">
+            <h2>Experience</h2>
+            <div class="job">
+              <h3>Centralogic</h3>
+              <p class="muted">
+                Lead Software Engineer, Aug 2026 to present<br />Software Engineer, Feb 2026 to Aug
+                2026
+              </p>
+              <ul>
+                <li>
+                  <b>AI orchestration platform</b>Architected and maintained an enterprise platform
+                  for aNPS and eNPS with Node.js, Express, TypeScript, Prisma and PostgreSQL.
+                </li>
+                <li>
+                  <b>Semantic search</b>Hybrid vector and BM25 search on OpenSearch k-NN/HNSW, with
+                  clustering of up to 2,500 vectors per operation.
+                </li>
+                <li>
+                  <b>Analytics</b>11 PostgreSQL materialized views on 15-minute refresh cycles for
+                  month-to-date, survey, mentor, influencer, hierarchy and trailing 13-month eNPS
+                  dashboards.
+                </li>
+                <li>
+                  <b>Security</b>Okta JWT/JWKS, 4 RBAC groups, hierarchy-based row-level access,
+                  internal service authentication and hashed API keys.
+                </li>
+                <li>
+                  <b>.NET migration</b>Led the move of a 25K-line admin service to Express 5 and
+                  TypeScript: 96% API parity (134 of 139 routes) in under 4 months.
+                </li>
+                <li>
+                  <b>Learning Module</b>A Fastify 5, TypeScript and TypeBox microservice with 29
+                  REST APIs for learning workflows across 150+ colleges.
+                </li>
+                <li>
+                  <b>Document AI pipeline</b>Separate API, PDF-splitting and background workers on
+                  BullMQ and Redis to classify, extract and verify documents.
+                </li>
+                <li>
+                  <b>SkySlope sync</b>Real estate transaction sync with 5-minute polling, 3-hour
+                  office sync, repeatable BullMQ jobs, bulk processing and human review.
+                </li>
+              </ul>
+            </div>
+            <div class="job">
+              <h3>Orrizonte Technologies</h3>
+              <p class="muted">Software Engineer, Jun 2024 to Mar 2025, India</p>
+              <ul>
+                <li>
+                  <b>Health-tech platform</b>1M+ records and 30+ REST APIs. Redis caching work cut
+                  database load by 30% and API latency by 99.8% (9,000 ms to 15 ms).
+                </li>
+                <li>
+                  <b>Notification service</b>BullMQ and Redis for asynchronous jobs, concurrent
+                  workers, automatic retries and reliable delivery.
+                </li>
+                <li>
+                  <b>Authentication</b>JWT-based authentication and authorization across application
+                  services.
+                </li>
+              </ul>
+            </div>
+            <h4 style="margin-top: 20px">Education</h4>
+            <p class="muted">
+              Bachelor of Computer Applications, Chhatrapati Shahu Ji Maharaj University, Kanpur,
+              2018 to 2021
+            </p>
+          </div>
+        </div>
+      </section>
 
-<section id="companies"><div class="wrap">
-  <span class="kicker">&lt;companies /&gt;</span>
-  <h2 data-i="c_title">Companies &amp; products</h2>
-  <p class="sub" data-i="c_sub">Products and clients I've worked with through Centralogic.</p>
-  <div class="grid3">
-    <div class="card reveal"><div class="logo">eXp</div><h3>eXp</h3><p data-i="c_exp">A cloud-based real estate brokerage operating in many countries. Related work: transaction sync and Document AI pipelines.</p></div>
-    <div class="card reveal"><div class="logo p">CJ</div><h3>CentraJob</h3><p data-i="c_cj">A hiring and career platform built with Centralogic.</p></div>
-    <div class="card reveal"><div class="logo b">BV</div><h3>BloomValue</h3><p data-i="c_bv">A product built with Centralogic on the same Node.js, PostgreSQL and AI stack.</p></div>
-  </div>
-</div></section>
+      <section class="scene" id="contact" data-state="5">
+        <div class="wrap veil">
+          <h2>Let’s build the next system</h2>
+          <p class="lede">
+            Talk to me about backend architecture, distributed systems or AI retrieval.
+          </p>
+          <p class="mail" id="mail">kartikeyudainiya@gmail.com</p>
+          <div class="btns">
+            <button class="btn primary" id="copy" type="button">Copy email</button
+            ><a
+              class="btn"
+              href="https://www.linkedin.com/in/kartikey-udainiya-b1a78831a/"
+              target="_blank"
+              rel="noopener"
+              >LinkedIn</a
+            >
+            <a
+              class="btn"
+              href="https://drive.google.com/file/d/1AZjmxoNQSclGPS00kyY3m5lhIfVk0R2f/view"
+              target="_blank"
+              rel="noopener"
+              >Resume</a
+            >
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer>
+      <div class="wrap">Kartikey Udainiya · Pune</div>
+    </footer>
+    <div id="detail" role="dialog" aria-modal="true" aria-labelledby="dTitle" hidden></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+      const SKILLS = [
+        [
+          "Backend",
+          "Node.js, Fastify, Express.js, .NET Core, REST API design, OpenAPI/Swagger, Backend-for-Frontend, JWT, Keycloak (OIDC), OAuth 2.0, RBAC",
+        ],
+        [
+          "Data & Messaging",
+          "PostgreSQL, MongoDB, MySQL, Redis, data modeling, query optimization, row-level security, Apache Kafka, AWS SQS, SNS and EventBridge",
+        ],
+        [
+          "Architecture",
+          "Microservices, event-driven architecture, multi-tenant SaaS, system design, monorepos (Turborepo, pnpm), design systems, feature flags, i18n",
+        ],
+        [
+          "Cloud & DevOps",
+          "AWS (Lambda, SQS, SNS, EventBridge), Azure (AKS, Blob Storage, DevOps, OpenAI), Docker",
+        ],
+        [
+          "AI & Testing",
+          "Azure OpenAI GPT-4.1, Text-to-SQL, prompt engineering, Vitest, React Testing Library, MSW, unit and integration testing, ESLint, Prettier",
+        ],
+        [
+          "Frontend",
+          "React.js, TypeScript, TanStack Query, React Hook Form, Zod, Tailwind CSS, HTML5, CSS3, Vite, Angular, Flutter, responsive design, ARIA",
+        ],
+      ];
+      const LANGS =
+        "TypeScript, JavaScript (ES6+), C#, SQL, Java. Practices: Git, GitHub, Agile/Scrum, SDLC, code review, performance optimization.";
+      /* name, tagline, summary, features, stack, stages[[name,explain]], decisions[[t,why]], challenges[[t,approach]] */
+      const LABS = [
+        {
+          id: "neuralsearch",
+          name: "NeuralSearch",
+          tag: "Semantic search and retrieval",
+          sum: "A retrieval platform that would answer questions from a document collection and show which passages support each answer.",
+          features: [
+            "RAG with cited passages",
+            "Vector embeddings in OpenSearch",
+            "Document ingestion pipelines",
+            "Context-aware responses",
+          ],
+          stack: "TypeScript · Node.js · OpenSearch · Embedding API · LLM · BullMQ · Redis",
+          stages: [
+            [
+              "Ingest",
+              "Documents would be parsed, cleaned and split along headings and paragraphs, keeping source and access metadata on every chunk.",
+            ],
+            [
+              "Embed",
+              "Workers would embed chunks in batches. A content hash would skip chunks that have not changed.",
+            ],
+            [
+              "Index",
+              "Each chunk would be stored in OpenSearch with both its text and its vector.",
+            ],
+            [
+              "Retrieve",
+              "BM25 and k-NN queries would run together, filtered by the reader’s permissions, then merged by rank.",
+            ],
+            [
+              "Answer",
+              "The model would answer only from retrieved passages, cite them, and say when the evidence is too weak.",
+            ],
+          ],
+          decisions: [
+            [
+              "Merge by rank",
+              "BM25 and vector scores use different scales. Reciprocal rank fusion would combine positions without score calibration.",
+            ],
+            [
+              "Filter during retrieval",
+              "Permissions would apply inside the search query, so restricted text never reaches the prompt.",
+            ],
+            [
+              "Version the index",
+              "Each embedding model would get its own index, with an alias switch after re-indexing.",
+            ],
+          ],
+          challenges: [
+            [
+              "Chunk boundaries",
+              "Small chunks lose context and large ones dilute relevance. I would compare strategies on a labelled question set.",
+            ],
+            [
+              "Measuring quality",
+              "I would track retrieval recall separately from answer faithfulness to find which stage failed.",
+            ],
+            ["Stale content", "Updates and deletions would need to remove old chunks reliably."],
+          ],
+        },
+        {
+          id: "documind",
+          name: "DocuMind AI",
+          tag: "Document processing and extraction",
+          sum: "A pipeline that would turn PDFs and scans into validated, structured JSON.",
+          features: [
+            "PDF and document ingestion",
+            "OCR for scanned pages",
+            "LLM-based extraction to structured JSON",
+            "BullMQ jobs managed in Redis",
+          ],
+          stack: "TypeScript · Node.js · BullMQ · Redis · PostgreSQL · OCR engine · LLM",
+          stages: [
+            [
+              "Upload",
+              "The API would store the file, record it and return a job ID without waiting for processing.",
+            ],
+            [
+              "Split & OCR",
+              "A worker would split pages and run OCR only where a page has no usable text layer.",
+            ],
+            [
+              "Classify",
+              "Each document would be assigned a type, which selects its extraction schema.",
+            ],
+            ["Extract", "The model would fill the schema and note the page each value came from."],
+            [
+              "Verify",
+              "Schema and business rules would check the output. Doubtful fields would go to a person.",
+            ],
+          ],
+          decisions: [
+            [
+              "One queue per stage",
+              "CPU-heavy OCR and rate-limited model calls would scale and retry independently.",
+            ],
+            [
+              "PostgreSQL holds the truth",
+              "Redis would run jobs, while durable document state would live in the database.",
+            ],
+            [
+              "Validate every output",
+              "Model JSON would be treated as untrusted input until it passes the schema.",
+            ],
+          ],
+          challenges: [
+            [
+              "Safe retries",
+              "Idempotency keys per document, page and stage would prevent duplicate results.",
+            ],
+            ["Poor scans", "Low OCR confidence would trigger review instead of a guessed value."],
+            [
+              "Cost control",
+              "Text-layer checks and page selection would limit unnecessary model calls.",
+            ],
+          ],
+        },
+        {
+          id: "agentflow",
+          name: "AgentFlow",
+          tag: "Multi-agent workflow orchestration",
+          sum: "An orchestrator where specialised agents would plan, call tools and hand work to each other under visible controls.",
+          features: [
+            "Autonomous agents with scoped tools",
+            "Tool calling and task scheduling",
+            "Structured agent messages",
+            "Execution monitoring",
+          ],
+          stack: "TypeScript · Node.js · PostgreSQL · BullMQ · Redis · LLM tool calling",
+          stages: [
+            [
+              "Goal",
+              "A request would become a run with a budget, a deadline and a list of allowed tools.",
+            ],
+            ["Plan", "A planner would break the goal into a graph of dependent tasks."],
+            ["Dispatch", "A scheduler would queue each task once its dependencies finish."],
+            [
+              "Act",
+              "Agents would call typed tools. Actions with side effects would wait for approval.",
+            ],
+            [
+              "Trace",
+              "Every message, call and result would be recorded so a run can be inspected.",
+            ],
+          ],
+          decisions: [
+            [
+              "Explicit task graph",
+              "The orchestrator would own control flow, which is easier to debug than free-form agent chat.",
+            ],
+            ["Least privilege", "Each agent would receive only the tools its task needs."],
+            ["Checkpoint each step", "A failed run would resume from the last completed task."],
+          ],
+          challenges: [
+            [
+              "Runaway loops",
+              "Step, token and time limits would end a run that stops making progress.",
+            ],
+            ["Repeated side effects", "Tool calls would carry idempotency keys."],
+            [
+              "Untrusted tool output",
+              "Retrieved text would be handled as data and could not grant new permissions.",
+            ],
+          ],
+        },
+        {
+          id: "codelens",
+          name: "CodeLens AI",
+          tag: "Code intelligence for repositories",
+          sum: "A tool that would index a repository so developers could search it by meaning, trace dependencies and draft documentation.",
+          features: [
+            "Repository indexing and code embeddings",
+            "Semantic code search",
+            "Dependency analysis",
+            "Code explanations and draft documentation",
+          ],
+          stack: "TypeScript · Tree-sitter · Embedding API · OpenSearch · PostgreSQL · LLM",
+          stages: [
+            [
+              "Clone",
+              "The service would read a repository at one commit, skipping secrets, binaries and vendored files.",
+            ],
+            [
+              "Parse",
+              "A syntax parser would split code into functions and classes and find imports.",
+            ],
+            [
+              "Index",
+              "Symbols would be embedded for search, and their relations stored as a dependency graph.",
+            ],
+            [
+              "Retrieve",
+              "A question would match symbols, then pull in their direct callers and dependencies.",
+            ],
+            [
+              "Explain",
+              "The model would explain the code and link every claim to a file and line.",
+            ],
+          ],
+          decisions: [
+            ["Split by syntax", "Whole functions keep more meaning than fixed-size text windows."],
+            [
+              "Search plus graph",
+              "Similarity finds a starting point and the graph supplies related code.",
+            ],
+            ["Incremental updates", "Only files changed between commits would be re-indexed."],
+          ],
+          challenges: [
+            [
+              "Dynamic calls",
+              "Static analysis misses some links, so the graph would mark uncertain edges.",
+            ],
+            ["Exact identifiers", "Keyword search would sit alongside vectors for symbol names."],
+            [
+              "Private code",
+              "Indexes would be isolated per repository with matching access rules.",
+            ],
+          ],
+        },
+        {
+          id: "datapulse",
+          name: "DataPulse",
+          tag: "Real-time analytics and insights",
+          sum: "An event-driven platform that would aggregate live data, flag anomalies and describe what changed in plain language.",
+          features: [
+            "Kafka event streaming",
+            "Real-time windowed processing",
+            "Anomaly detection",
+            "AI-written insights and dashboards",
+          ],
+          stack: "TypeScript · Apache Kafka · Stream consumers · PostgreSQL · Redis · LLM",
+          stages: [
+            ["Produce", "Services would publish versioned events with unique IDs."],
+            ["Stream", "Kafka would partition events by tenant or entity to keep their order."],
+            ["Aggregate", "Consumers would compute time-window metrics and handle late events."],
+            ["Detect", "Each metric would be compared with its recent seasonal baseline."],
+            ["Explain", "A model would summarise flagged changes using the computed figures."],
+          ],
+          decisions: [
+            [
+              "Statistics detect, AI explains",
+              "Detection would stay testable and repeatable, and the model would only describe results.",
+            ],
+            ["Idempotent consumers", "Replays would be safe under at-least-once delivery."],
+            ["Dead-letter topic", "Bad events would be set aside without blocking a partition."],
+          ],
+          challenges: [
+            ["Hot partitions", "Uneven keys would need monitoring and possibly composite keys."],
+            ["Late events", "A grace window and correction updates would keep totals honest."],
+            ["Alert noise", "Persistence rules would reduce alerts from brief spikes."],
+          ],
+        },
+        {
+          id: "visionstack",
+          name: "VisionStack",
+          tag: "Multimodal document and image understanding",
+          sum: "A platform that would read images, charts and documents together and answer questions with pointers to the source region.",
+          features: [
+            "Vision-language models",
+            "Image and document understanding",
+            "Multimodal retrieval",
+            "Structured extraction and question answering",
+          ],
+          stack: "TypeScript · Node.js · Vision-language model · OCR · OpenSearch · Object storage",
+          stages: [
+            ["Collect", "Images and pages would be stored with their origin and access rules."],
+            ["Analyse", "Layout detection would separate text, tables and figures."],
+            [
+              "Describe",
+              "OCR and a vision model would produce text and descriptions for each region.",
+            ],
+            ["Retrieve", "Questions would search the text and visual embeddings."],
+            ["Respond", "The answer would highlight the page region it relies on."],
+          ],
+          decisions: [
+            [
+              "Keep coordinates",
+              "Every extracted item would keep its page position for verification.",
+            ],
+            [
+              "Route by content",
+              "Plain text would take the cheaper path and figures would use the vision model.",
+            ],
+            ["Typed output", "Extraction would be checked against a schema."],
+          ],
+          challenges: [
+            [
+              "Invented details",
+              "Values would be cross-checked with OCR and flagged when they disagree.",
+            ],
+            ["Dense tables", "Table structure would need its own evaluation set."],
+            ["Latency", "Heavy analysis would run at ingestion instead of at question time."],
+          ],
+        },
+      ];
+      (() => {
+        const $ = (s) => document.querySelector(s),
+          $$ = (s) => [...document.querySelectorAll(s)];
+        const el = (h) => {
+          const t = document.createElement("template");
+          t.innerHTML = h.trim();
+          return t.content.firstChild;
+        };
+        const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-<section id="projects" class="alt"><div class="wrap">
-  <span class="kicker">&lt;projects /&gt;</span>
-  <h2 data-i="p_title">Projects</h2>
-  <div class="grid2">
-    <div class="card reveal"><h3 style="margin-top:0">Zerodha Trading AI Assistant</h3><p data-i="p1">AI-powered trading workflows with real-time market data, natural-language intent detection and order execution using Claude AI and Kite Connect APIs.</p><div class="tags"><span>Node.js</span><span>Claude AI</span><span>Kite Connect SDK</span></div></div>
-    <div class="card reveal"><h3 style="margin-top:0">ReelEstate</h3><p data-i="p2">Property discovery with video streaming, advanced filtering and bookmarking for 1,000+ listings, 500 MB video uploads and API latency under 150 ms.</p><div class="tags"><span>React Native</span><span>Node.js</span><span>TypeScript</span><span>MongoDB</span><span>AWS S3</span></div></div>
-  </div>
-</div></section>
+        /* content */
+        let hover = -1;
+        SKILLS.forEach(([n, t], i) => {
+          const b = el(
+            `<button type="button" class="skill"><h4>${n.replace("&", "&amp;")}</h4><span>${t}</span></button>`,
+          );
+          b.onpointerenter =
+            b.onfocus =
+            b.onclick =
+              () => {
+                hover = i;
+                kick();
+              };
+          b.onpointerleave = b.onblur = () => {
+            hover = -1;
+            kick();
+          };
+          $("#skillList").append(b);
+        });
+        $("#skillList").append(
+          el(
+            `<p class="muted" style="font-size:14px;border-top:1px solid var(--line);padding-top:15px"><b style="color:var(--text)">Languages:</b> ${LANGS}</p>`,
+          ),
+        );
+        LABS.forEach((p, i) => {
+          $("#labs").append(
+            el(`<div class="wrap lab" data-focus="${i}"><div class="col veil ${i % 2 ? "right" : ""}">
+<span class="badge">Project</span><h3>${p.name}</h3><p class="lede">${p.tag}</p><p class="muted">${p.sum}</p>
+<div class="stack">Proposed stack: ${p.stack}</div>
+<details><summary>Planned features</summary><ul>${p.features.map((f) => `<li>${f}</li>`).join("")}</ul></details>
+<div class="btns"><button type="button" class="btn" data-lab="${p.id}">Explore ${p.name}</button></div></div></div>`),
+          );
+        });
 
-<section id="skills"><div class="wrap">
-  <span class="kicker">&lt;skills /&gt;</span>
-  <h2 data-i="k_title">Skills</h2>
-  <div class="skills">
-    <div class="reveal"><h3 data-i="k1">Frontend</h3><div class="tags"><span>React.js</span><span>TypeScript</span><span>TanStack Query</span><span>React Hook Form</span><span>Zod</span><span>Tailwind CSS</span><span>Vite</span><span>Angular</span><span>Flutter</span><span>ARIA</span></div></div>
-    <div class="reveal"><h3 data-i="k2">Backend</h3><div class="tags"><span>Node.js</span><span>Fastify</span><span>Express.js</span><span>.NET Core</span><span>C#</span><span>Java</span><span>OpenAPI</span><span>BFF</span><span>JWT</span><span>Keycloak</span><span>OAuth 2.0</span><span>RBAC</span></div></div>
-    <div class="reveal"><h3 data-i="k3">Data &amp; messaging</h3><div class="tags"><span>PostgreSQL</span><span>MongoDB</span><span>MySQL</span><span>Redis</span><span>BullMQ</span><span>OpenSearch</span><span>Kafka</span><span>AWS SQS/SNS</span><span>Row-Level Security</span></div></div>
-    <div class="reveal"><h3 data-i="k4">Cloud &amp; DevOps</h3><div class="tags"><span>AWS Lambda</span><span>EventBridge</span><span>Azure AKS</span><span>Blob Storage</span><span>Azure DevOps</span><span>Azure OpenAI</span><span>Docker</span></div></div>
-    <div class="reveal"><h3 data-i="k5">Architecture</h3><div class="tags"><span>Microservices</span><span>Event-Driven</span><span>Multi-Tenant SaaS</span><span>System Design</span><span>Turborepo</span><span>pnpm</span><span>Feature Flags</span><span>i18n</span></div></div>
-    <div class="reveal"><h3 data-i="k6">Testing &amp; AI</h3><div class="tags"><span>Vitest</span><span>React Testing Library</span><span>MSW</span><span>ESLint</span><span>GPT-4.1</span><span>Text-to-SQL</span><span>Prompt Engineering</span></div></div>
-  </div>
-</div></section>
+        /* detail view */
+        const detail = $("#detail");
+        let opener = null,
+          savedY = 0;
+        function render(i) {
+          const p = LABS[i],
+            n = LABS.length;
+          detail.innerHTML = `<div class="wrap"><div class="dbar"><button class="btn" data-close>← Back to portfolio</button><div style="display:flex;gap:8px"><button class="btn" data-lab="${LABS[(i + n - 1) % n].id}">Previous</button><button class="btn" data-lab="${LABS[(i + 1) % n].id}">Next</button></div></div>
+ <span class="badge">Project</span><h2 id="dTitle">${p.name}</h2><p class="lede">${p.sum}</p><p class="muted"></p>
+ <section><h3>Proposed architecture</h3><p class="muted">Select a stage to see what it would do.</p><div class="arch">${p.stages.map((s, j) => `${j ? "<i></i>" : ""}<button type="button" data-stage="${j}" aria-pressed="${!j}">${s[0]}</button>`).join("")}</div><div class="explain" aria-live="polite">${p.stages[0][1]}</div></section>
+ <section><h3>Engineering decisions</h3><div class="three">${p.decisions.map((d) => `<div><h4>${d[0]}</h4><p class="muted">${d[1]}</p></div>`).join("")}</div></section>
+ <section><h3>Expected challenges</h3>${p.challenges.map((d) => `<details><summary>${d[0]}</summary><p>${d[1]}</p></details>`).join("")}</section>
+ <section><h3>Proposed technologies</h3><p class="stack">${p.stack}</p></section></div>`;
+          detail.querySelectorAll("[data-stage]").forEach(
+            (b) =>
+              (b.onclick = () => {
+                detail
+                  .querySelectorAll("[data-stage]")
+                  .forEach((x) => x.setAttribute("aria-pressed", x === b));
+                detail.querySelector(".explain").textContent = p.stages[b.dataset.stage][1];
+              }),
+          );
+        }
+        const background = $$("header,main,footer");
+        function openLab(id) {
+          const i = LABS.findIndex((p) => p.id === id);
+          if (i < 0) return closeLab();
+          if (detail.hidden) {
+            savedY = scrollY;
+            opener = document.activeElement;
+          }
+          render(i);
+          detail.hidden = false;
+          detail.scrollTop = 0;
+          document.documentElement.style.overflow = "hidden";
+          background.forEach((e) => (e.inert = true));
+          detail.querySelector("[data-close]").focus({ preventScroll: true });
+        }
+        function closeLab() {
+          if (detail.hidden) return;
+          detail.hidden = true;
+          document.documentElement.style.overflow = "";
+          background.forEach((e) => (e.inert = false));
+          scrollTo({ top: savedY, behavior: "instant" });
+          opener && opener.focus && opener.focus({ preventScroll: true });
+        }
+        const setHash = (h) => {
+          try {
+            history.replaceState(null, "", h ? "#" + h : location.pathname + location.search);
+          } catch (e) {}
+        };
+        function route() {
+          const h = location.hash.slice(1);
+          if (h.startsWith("lab-")) openLab(h.slice(4));
+          else closeLab();
+        }
+        addEventListener("hashchange", route);
+        document.addEventListener("click", (e) => {
+          const t = e.target.closest("[data-lab],[data-close],[data-go]");
+          if (!t) return;
+          if (t.dataset.lab) {
+            openLab(t.dataset.lab);
+            setHash("lab-" + t.dataset.lab);
+          } else if (t.hasAttribute("data-close")) {
+            setHash("");
+            closeLab();
+          } else {
+            e.preventDefault();
+            document
+              .getElementById(t.dataset.go)
+              .scrollIntoView({ behavior: reduce ? "auto" : "smooth" });
+            setHash(t.dataset.go === "hero" ? "" : t.dataset.go);
+          }
+        });
+        addEventListener("keydown", (e) => {
+          if (e.key === "Escape" && !detail.hidden) {
+            setHash("");
+            closeLab();
+          }
+        });
 
-<section id="contact" class="alt"><div class="wrap contact">
-  <div class="reveal">
-    <span class="kicker">&lt;contact /&gt;</span>
-    <h2 data-i="t_title">Let's talk</h2>
-    <p class="sub" data-i="t_sub">Open to interesting engineering problems and leadership roles.</p>
-    <h3 style="font-size:1.1rem" data-i="d_title">Education</h3>
-    <p class="sub" style="margin-top:.4rem"><span data-i="d_text">Bachelor of Computer Applications</span>, Chhatrapati Shahuji Maharaj University, Kanpur &middot; 2018 &ndash; 2021</p>
-  </div>
-  <div class="reveal">
-    <div class="crow"><span class="k" data-i="t_email">Email</span><span class="v">kartikeyudainiya@gmail.com</span><button class="cp" type="button" data-copy="kartikeyudainiya@gmail.com"><span class="l1" data-i="t_copy">Copy</span><span class="l2" data-i="t_ok">Copied</span></button></div>
-    <div class="crow"><span class="k" data-i="t_phone">Phone</span><span class="v">+91 6392463266</span><button class="cp" type="button" data-copy="+91 6392463266"><span class="l1" data-i="t_copy">Copy</span><span class="l2" data-i="t_ok">Copied</span></button></div>
-    <div class="links">
-      <!-- Replace these with your real profile URLs -->
-      <a class="btn" href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a>
-      <a class="btn" href="#top">Portfolio</a>
-    </div>
-  </div>
-</div></section>
-</main>
-<footer><div class="wrap" data-i="f_text">Designed and built in Pune.</div></footer>
-<script>
-const T={};
-T.hi={n_about:`परिचय`,n_impact:`प्रभाव`,n_exp:`अनुभव`,n_comp:`कंपनियाँ`,n_proj:`प्रोजेक्ट्स`,n_contact:`संपर्क`,
-h_greet:`नमस्ते, मैं हूँ`,h_role:`लीड सॉफ्टवेयर इंजीनियर`,h_tag:`मैं बैकएंड सिस्टम, AI सर्च और डेटा पाइपलाइन बनाता हूँ जो बड़े स्तर पर भी तेज़ रहते हैं।`,h_cta1:`प्रभाव देखें`,h_cta2:`संपर्क करें`,
-a_title:`मेरे बारे में`,a_text:`मैं पुणे में रहने वाला लीड सॉफ्टवेयर इंजीनियर हूँ और Node.js, TypeScript व PostgreSQL से एंटरप्राइज़ प्लेटफ़ॉर्म बनाता हूँ। मेरा काम AI आधारित सिमैंटिक सर्च, वितरित जॉब पाइपलाइन और सुरक्षित मल्टी-टेनेंट API तक फैला है।`,
-a_text2:`मुझे ऐसे सिस्टम पसंद हैं जिन्हें मापा जा सके: कम लेटेंसी, कम जटिलता, साफ़ आर्किटेक्चर। हाल ही में मैंने 25 हज़ार लाइन की .NET सर्विस को चार महीने से कम में Node.js पर माइग्रेट करने का नेतृत्व किया।`,
-i_title:`आँकड़ों में प्रभाव`,i_sub:`मेरे बनाए और संभाले गए प्रोडक्शन सिस्टम के आँकड़े।`,
-m1:`API लेटेंसी में कमी (9,000 ms से 15 ms)`,m2:`.NET से Node.js माइग्रेशन में API समानता (139 में से 134 रूट)`,m3:`लर्निंग मॉड्यूल से जुड़े कॉलेज`,m4:`हेल्थ-टेक प्लेटफ़ॉर्म पर संभाले गए रिकॉर्ड`,m5:`लर्निंग मॉड्यूल माइक्रोसर्विस के REST API`,m6:`हर 15 मिनट में रिफ्रेश होने वाले मटेरियलाइज़्ड व्यू`,m7:`माइग्रेट की गई .NET कोड की लाइनें`,m8:`Redis कैशिंग से डेटाबेस लोड में कमी`,
-e_title:`अनुभव`,e_lead:`लीड सॉफ्टवेयर इंजीनियर`,e_se:`सॉफ्टवेयर इंजीनियर`,e_now:`वर्तमान`,
-cl1:`Node.js, Express, TypeScript, Prisma और PostgreSQL पर एंटरप्राइज़ AI ऑर्केस्ट्रेशन प्लेटफ़ॉर्म डिज़ाइन किया, 36 रूट फ़ाइलों के साथ controller-service-repository आर्किटेक्चर में।`,
-cl2:`OpenAI एम्बेडिंग (1,536 आयाम) और OpenSearch k-NN/HNSW से AI सिमैंटिक सर्च बनाया; हाइब्रिड वेक्टर + BM25 और 2,500 वेक्टर तक क्लस्टरिंग।`,
-cl3:`25 हज़ार लाइन की .NET एडमिन सर्विस को Node.js/Express 5/TypeScript पर माइग्रेट कराया: चार महीने से कम में 96% API समानता (139 में से 134 रूट)।`,
-cl4:`Fastify 5 पर लर्निंग मॉड्यूल माइक्रोसर्विस बनाई जिसमें 150+ कॉलेजों के लिए 29 REST API हैं; BullMQ और Redis पर Document AI पाइपलाइन डिज़ाइन की।`,
-cl5:`Okta JWT/JWKS, 4 RBAC समूह और हायरार्की आधारित रो-लेवल एक्सेस से सुरक्षा डिज़ाइन की; हर 15 मिनट में रिफ्रेश होने वाले 11 मटेरियलाइज़्ड व्यू बनाए।`,
-cl6:`SkySlope के साथ रियल-एस्टेट लेन-देन सिंक को स्वचालित किया: 5 मिनट की पोलिंग, 3 घंटे का ऑफ़िस सिंक, दोहराए जाने वाले BullMQ जॉब और मानव सत्यापन।`,
-or1:`1 मिलियन+ रिकॉर्ड और 30+ REST API वाला हेल्थ-टेक प्लेटफ़ॉर्म बनाया; Redis कैशिंग से डेटाबेस लोड 30% और API लेटेंसी 99.8% घटी (9,000 ms से 15 ms)।`,
-or2:`BullMQ और Redis पर वितरित नोटिफ़िकेशन सर्विस बनाई: एसिंक्रोनस जॉब, समानांतर वर्कर और स्वचालित रीट्राई।`,or3:`API की सुरक्षा के लिए JWT आधारित ऑथेंटिकेशन और ऑथराइज़ेशन लागू किया।`,
-s_title:`रिक्वेस्ट का सफ़र`,s_sub:`क्लाइंट से डेटाबेस तक, मेरे बनाए सिस्टम की बनावट।`,
-c_title:`कंपनियाँ और प्रोडक्ट`,c_sub:`Centralogic के माध्यम से जिन प्रोडक्ट और क्लाइंट के साथ काम किया।`,
-c_exp:`क्लाउड आधारित रियल एस्टेट ब्रोकरेज जो कई देशों में काम करती है। संबंधित काम: लेन-देन सिंक और Document AI पाइपलाइन।`,c_cj:`Centralogic के साथ बना हायरिंग और करियर प्लेटफ़ॉर्म।`,c_bv:`Centralogic के साथ बना प्रोडक्ट, उसी Node.js, PostgreSQL और AI स्टैक पर आधारित।`,
-p_title:`प्रोजेक्ट्स`,p1:`रियल-टाइम मार्केट डेटा, प्राकृतिक भाषा से इरादा पहचान और ऑर्डर एक्ज़ीक्यूशन वाले AI ट्रेडिंग वर्कफ़्लो, Claude AI और Kite Connect API के साथ।`,
-p2:`1,000+ लिस्टिंग के लिए वीडियो स्ट्रीमिंग, एडवांस्ड फ़िल्टर और बुकमार्क के साथ प्रॉपर्टी खोज; 500 MB तक वीडियो अपलोड और 150 ms से कम API लेटेंसी।`,
-k_title:`स्किल्स`,k1:`फ्रंटएंड`,k2:`बैकएंड`,k3:`डेटा और मैसेजिंग`,k4:`क्लाउड और DevOps`,k5:`आर्किटेक्चर`,k6:`टेस्टिंग और AI`,
-d_title:`शिक्षा`,d_text:`बैचलर ऑफ़ कंप्यूटर एप्लीकेशन्स`,t_title:`बात करें`,t_sub:`दिलचस्प इंजीनियरिंग समस्याओं और लीडरशिप भूमिकाओं के लिए उपलब्ध।`,t_copy:`कॉपी`,t_ok:`कॉपी हुआ`,t_email:`ईमेल`,t_phone:`फ़ोन`,f_text:`पुणे में डिज़ाइन और निर्मित।`};
+        /* retrieval illustration */
+        const Q = [
+          {
+            q: "career growth",
+            docs: [
+              ["“I want a clearer path for career growth.”", 1],
+              ["“I can’t see how to move up from my current role.”", 1],
+              ["“There are few chances to learn skills for a promotion.”", 1],
+              ["“Growth in the market made this a busy quarter.”", 0],
+              ["“The new office coffee is great.”", 0],
+            ],
+          },
+          {
+            q: "slow support",
+            docs: [
+              ["“Support was slow when my login broke.”", 1],
+              ["“I waited days for anyone to answer my ticket.”", 1],
+              ["“Getting help takes far too long.”", 1],
+              ["“Uploads are slow on my home network.”", 0],
+              ["“My mentor explained the process well.”", 0],
+            ],
+          },
+          {
+            q: "VPN access",
+            docs: [
+              ["“VPN drops every afternoon.”", 1, 0],
+              ["“I can’t reach company systems from home.”", 1, 1],
+              ["“VPN access took a week to set up.”", 1, 1],
+              ["“Parking near the office is difficult.”", 0],
+              ["“The onboarding session was helpful.”", 0],
+            ],
+          },
+        ];
+        let qi = 0,
+          mode = "hybrid";
+        const words = (s) => s.toLowerCase().match(/[a-z]+/g) || [];
+        function chips(box, items, cur, set) {
+          box.innerHTML = "";
+          items.forEach(([v, l]) => {
+            const b = el(
+              `<button type="button" class="chip" aria-pressed="${v === cur}">${l}</button>`,
+            );
+            b.onclick = () => {
+              set(v);
+              demo();
+            };
+            box.append(b);
+          });
+        }
+        function demo() {
+          chips(
+            $("#queries"),
+            Q.map((x, i) => [i, `Query: “${x.q}”`]),
+            qi,
+            (v) => (qi = v),
+          );
+          chips(
+            $("#modes"),
+            [
+              ["bm25", "Keyword only"],
+              ["vector", "Vector only"],
+              ["hybrid", "Hybrid"],
+            ],
+            mode,
+            (v) => (mode = v),
+          );
+          const { q, docs } = Q[qi],
+            terms = words(q);
+          let found = 0,
+            rel = 0;
+          $("#results").innerHTML = docs
+            .map(([t, r, vm = r]) => {
+              const k = words(t).some((w) => terms.includes(w)),
+                v = !!vm,
+                hit = mode === "bm25" ? k : mode === "vector" ? v : k || v;
+              rel += r;
+              if (hit && r) found++;
+              const why = !hit
+                ? r
+                  ? "Missed, but relevant"
+                  : "Not retrieved"
+                : (k && v && mode === "hybrid"
+                    ? "Keyword + meaning"
+                    : mode !== "vector" && k
+                      ? "Keyword match"
+                      : "Meaning match") + (r ? "" : ", off topic");
+              return `<li class="${hit ? "hit" : "miss"}"><span>${t}</span><small>${why}</small></li>`;
+            })
+            .join("");
+          $("#count").textContent =
+            `Relevant comments retrieved: ${found} of ${rel} in this made-up sample`;
+        }
+        demo();
 
-T.mr={n_about:`माझ्याबद्दल`,n_impact:`परिणाम`,n_exp:`अनुभव`,n_comp:`कंपन्या`,n_proj:`प्रकल्प`,n_contact:`संपर्क`,
-h_greet:`नमस्कार, मी`,h_role:`लीड सॉफ्टवेअर इंजिनिअर`,h_tag:`मी बॅकएंड सिस्टीम, AI सर्च आणि डेटा पाइपलाइन तयार करतो, ज्या मोठ्या प्रमाणावरही वेगवान राहतात.`,h_cta1:`परिणाम पहा`,h_cta2:`संपर्क साधा`,
-a_title:`माझ्याबद्दल`,a_text:`मी पुण्यात राहणारा लीड सॉफ्टवेअर इंजिनिअर आहे आणि Node.js, TypeScript व PostgreSQL वापरून एंटरप्राइझ प्लॅटफॉर्म तयार करतो. माझे काम AI आधारित सिमँटिक सर्च, वितरित जॉब पाइपलाइन आणि सुरक्षित मल्टी-टेनंट API पर्यंत आहे.`,
-a_text2:`मोजता येणाऱ्या सिस्टीम मला आवडतात: कमी लेटन्सी, कमी गुंतागुंत, स्वच्छ आर्किटेक्चर. अलीकडे मी 25 हजार ओळींची .NET सेवा चार महिन्यांत Node.js वर नेण्याचे नेतृत्व केले.`,
-i_title:`आकड्यांतील परिणाम`,i_sub:`मी तयार केलेल्या आणि सांभाळलेल्या प्रोडक्शन सिस्टीममधील आकडे.`,
-m1:`API लेटन्सीमध्ये घट (9,000 ms वरून 15 ms)`,m2:`.NET ते Node.js स्थलांतरात API समानता (139 पैकी 134 रूट)`,m3:`लर्निंग मॉड्यूलशी जोडलेली महाविद्यालये`,m4:`हेल्थ-टेक प्लॅटफॉर्मवर हाताळलेले रेकॉर्ड`,m5:`लर्निंग मॉड्यूल मायक्रोसर्व्हिसमधील REST API`,m6:`दर 15 मिनिटांनी रिफ्रेश होणारे मटेरियलाइज्ड व्ह्यू`,m7:`स्थलांतरित केलेल्या .NET कोडच्या ओळी`,m8:`Redis कॅशिंगमुळे डेटाबेस लोडमध्ये घट`,
-e_title:`अनुभव`,e_lead:`लीड सॉफ्टवेअर इंजिनिअर`,e_se:`सॉफ्टवेअर इंजिनिअर`,e_now:`सध्या`,
-cl1:`Node.js, Express, TypeScript, Prisma आणि PostgreSQL वर एंटरप्राइझ AI ऑर्केस्ट्रेशन प्लॅटफॉर्म डिझाइन केला, 36 रूट फाइल्ससह controller-service-repository आर्किटेक्चरमध्ये.`,
-cl2:`OpenAI एम्बेडिंग (1,536 आयाम) आणि OpenSearch k-NN/HNSW वापरून AI सिमँटिक सर्च बनवला; हायब्रिड वेक्टर + BM25 आणि 2,500 वेक्टरपर्यंत क्लस्टरिंग.`,
-cl3:`25 हजार ओळींची .NET अॅडमिन सेवा Node.js/Express 5/TypeScript वर स्थलांतरित केली: चार महिन्यांत 96% API समानता (139 पैकी 134 रूट).`,
-cl4:`Fastify 5 वर लर्निंग मॉड्यूल मायक्रोसर्व्हिस बनवली, 150+ महाविद्यालयांसाठी 29 REST API; BullMQ आणि Redis वर Document AI पाइपलाइन डिझाइन केली.`,
-cl5:`Okta JWT/JWKS, 4 RBAC गट आणि हायरार्की आधारित रो-लेव्हल अॅक्सेसने सुरक्षा डिझाइन केली; दर 15 मिनिटांनी रिफ्रेश होणारे 11 मटेरियलाइज्ड व्ह्यू बनवले.`,
-cl6:`SkySlope सोबत रिअल-इस्टेट व्यवहार सिंक स्वयंचलित केला: 5 मिनिटांची पोलिंग, 3 तासांचा ऑफिस सिंक, पुनरावृत्ती होणारे BullMQ जॉब आणि मानवी पडताळणी.`,
-or1:`1 दशलक्ष+ रेकॉर्ड आणि 30+ REST API असलेला हेल्थ-टेक प्लॅटफॉर्म बनवला; Redis कॅशिंगमुळे डेटाबेस लोड 30% आणि API लेटन्सी 99.8% कमी झाली (9,000 ms वरून 15 ms).`,
-or2:`BullMQ आणि Redis वर वितरित नोटिफिकेशन सेवा बनवली: असिंक्रोनस जॉब, समांतर वर्कर आणि आपोआप रीट्राय.`,or3:`API सुरक्षित ठेवण्यासाठी JWT आधारित ऑथेंटिकेशन आणि ऑथोरायझेशन लागू केले.`,
-s_title:`रिक्वेस्टचा प्रवास`,s_sub:`क्लायंटपासून डेटाबेसपर्यंत, मी बनवलेल्या सिस्टीमची रचना.`,
-c_title:`कंपन्या आणि प्रोडक्ट`,c_sub:`Centralogic मार्फत ज्या प्रोडक्ट आणि क्लायंटसोबत काम केले.`,
-c_exp:`अनेक देशांत कार्यरत क्लाउड आधारित रिअल इस्टेट ब्रोकरेज. संबंधित काम: व्यवहार सिंक आणि Document AI पाइपलाइन.`,c_cj:`Centralogic सोबत तयार झालेला हायरिंग आणि करिअर प्लॅटफॉर्म.`,c_bv:`Centralogic सोबत तयार झालेला प्रोडक्ट, त्याच Node.js, PostgreSQL आणि AI स्टॅकवर आधारित.`,
-p_title:`प्रकल्प`,p1:`रिअल-टाइम मार्केट डेटा, नैसर्गिक भाषेतून हेतू ओळख आणि ऑर्डर एक्झिक्युशन असलेले AI ट्रेडिंग वर्कफ्लो, Claude AI आणि Kite Connect API वापरून.`,
-p2:`1,000+ लिस्टिंगसाठी व्हिडिओ स्ट्रीमिंग, प्रगत फिल्टर आणि बुकमार्कसह प्रॉपर्टी शोध; 500 MB पर्यंत व्हिडिओ अपलोड आणि 150 ms पेक्षा कमी API लेटन्सी.`,
-k_title:`कौशल्ये`,k1:`फ्रंटएंड`,k2:`बॅकएंड`,k3:`डेटा आणि मेसेजिंग`,k4:`क्लाउड आणि DevOps`,k5:`आर्किटेक्चर`,k6:`टेस्टिंग आणि AI`,
-d_title:`शिक्षण`,d_text:`बॅचलर ऑफ कॉम्प्युटर अॅप्लिकेशन्स`,t_title:`बोलूया`,t_sub:`रोचक इंजिनिअरिंग समस्या आणि लीडरशिप भूमिकांसाठी उपलब्ध.`,t_copy:`कॉपी`,t_ok:`कॉपी झाले`,t_email:`ईमेल`,t_phone:`फोन`,f_text:`पुण्यात डिझाइन आणि तयार केले.`};
+        $("#copy").onclick = function () {
+          const done = (t) => {
+            this.textContent = t;
+            setTimeout(() => (this.textContent = "Copy email"), 2200);
+          };
+          const sel = () => {
+            const r = document.createRange();
+            r.selectNodeContents($("#mail"));
+            getSelection().removeAllRanges();
+            getSelection().addRange(r);
+            done("Selected, now copy it");
+          };
+          navigator.clipboard
+            ? navigator.clipboard
+                .writeText($("#mail").textContent)
+                .then(() => done("Email copied"), sel)
+            : sel();
+        };
 
-T.es={n_about:`Sobre mí`,n_impact:`Impacto`,n_exp:`Experiencia`,n_comp:`Empresas`,n_proj:`Proyectos`,n_contact:`Contacto`,
-h_greet:`Hola, soy`,h_role:`Ingeniero de software líder`,h_tag:`Diseño sistemas backend, búsqueda con IA y pipelines de datos que siguen siendo rápidos a escala.`,h_cta1:`Ver el impacto`,h_cta2:`Contactar`,
-a_title:`Sobre mí`,a_text:`Soy ingeniero de software líder en Pune y creo plataformas empresariales con Node.js, TypeScript y PostgreSQL. Mi trabajo abarca búsqueda semántica con IA, pipelines distribuidos de tareas y APIs multiinquilino seguras.`,
-a_text2:`Me gustan los sistemas medibles: menor latencia, menos piezas, arquitectura más limpia. Recientemente lideré la migración de un servicio .NET de 25 000 líneas a Node.js en menos de cuatro meses.`,
-i_title:`Impacto en cifras`,i_sub:`Cifras de sistemas en producción que construí y mantuve.`,
-m1:`Reducción de latencia de la API (de 9 000 ms a 15 ms)`,m2:`Paridad de API en la migración de .NET a Node.js (134 de 139 rutas)`,m3:`Instituciones atendidas por el módulo de aprendizaje`,m4:`Registros gestionados por la plataforma de salud digital`,m5:`APIs REST en el microservicio del módulo de aprendizaje`,m6:`Vistas materializadas actualizadas cada 15 minutos`,m7:`Líneas de código .NET migradas`,m8:`Reducción de carga en la base de datos con caché Redis`,
-e_title:`Experiencia`,e_lead:`Ingeniero de software líder`,e_se:`Ingeniero de software`,e_now:`Actualidad`,
-cl1:`Diseñé una plataforma empresarial de orquestación con IA en Node.js, Express, TypeScript, Prisma y PostgreSQL, con arquitectura controlador-servicio-repositorio en 36 archivos de rutas.`,
-cl2:`Construí búsqueda semántica con IA usando embeddings de OpenAI (1 536 dimensiones) y OpenSearch k-NN/HNSW; búsqueda híbrida vectorial + BM25 y clustering de hasta 2 500 vectores.`,
-cl3:`Lideré la migración de un servicio de administración .NET de 25 000 líneas a Node.js/Express 5/TypeScript: 96 % de paridad de API (134 de 139 rutas) en menos de 4 meses.`,
-cl4:`Creé el microservicio del módulo de aprendizaje con Fastify 5 y 29 APIs REST para más de 150 instituciones; diseñé un pipeline de Document AI con BullMQ y Redis.`,
-cl5:`Diseñé la seguridad con Okta JWT/JWKS, 4 grupos RBAC y acceso por filas según jerarquía; creé 11 vistas materializadas con actualización cada 15 minutos.`,
-cl6:`Automaticé la sincronización de transacciones inmobiliarias con SkySlope: sondeo cada 5 minutos, sincronización de oficinas cada 3 horas, tareas BullMQ recurrentes y verificación humana.`,
-or1:`Construí una plataforma de salud digital con más de 1 M de registros y 30+ APIs REST; la caché Redis redujo la carga de la base de datos un 30 % y la latencia de la API un 99,8 % (de 9 000 ms a 15 ms).`,
-or2:`Diseñé un servicio de notificaciones distribuido con BullMQ y Redis: tareas asíncronas, workers concurrentes y reintentos automáticos.`,or3:`Implementé autenticación y autorización con JWT para proteger las APIs.`,
-s_title:`El recorrido de una petición`,s_sub:`La forma de los sistemas que construyo, del cliente a la base de datos.`,
-c_title:`Empresas y productos`,c_sub:`Productos y clientes con los que he trabajado a través de Centralogic.`,
-c_exp:`Corredora inmobiliaria en la nube con presencia en muchos países. Trabajo relacionado: sincronización de transacciones y pipelines de Document AI.`,c_cj:`Plataforma de empleo y carrera desarrollada con Centralogic.`,c_bv:`Producto desarrollado con Centralogic sobre el mismo stack de Node.js, PostgreSQL e IA.`,
-p_title:`Proyectos`,p1:`Flujos de trading con IA: datos de mercado en tiempo real, detección de intención en lenguaje natural y ejecución de órdenes con Claude AI y las APIs de Kite Connect.`,
-p2:`Búsqueda de propiedades con streaming de video, filtros avanzados y favoritos para más de 1 000 anuncios, subidas de video de 500 MB y latencia de API inferior a 150 ms.`,
-k_title:`Habilidades`,k1:`Frontend`,k2:`Backend`,k3:`Datos y mensajería`,k4:`Nube y DevOps`,k5:`Arquitectura`,k6:`Pruebas e IA`,
-d_title:`Educación`,d_text:`Licenciatura en Aplicaciones Informáticas`,t_title:`Hablemos`,t_sub:`Abierto a problemas de ingeniería interesantes y roles de liderazgo.`,t_copy:`Copiar`,t_ok:`Copiado`,t_email:`Correo`,t_phone:`Teléfono`,f_text:`Diseñado y creado en Pune.`};
-T.fr={n_about:`À propos`,n_impact:`Impact`,n_exp:`Expérience`,n_comp:`Entreprises`,n_proj:`Projets`,n_contact:`Contact`,
-h_greet:`Bonjour, je suis`,h_role:`Ingénieur logiciel Lead`,h_tag:`Je conçois des systèmes backend, de la recherche IA et des pipelines de données qui restent rapides à grande échelle.`,h_cta1:`Voir l'impact`,h_cta2:`Me contacter`,
-a_title:`À propos`,a_text:`Je suis ingénieur logiciel lead à Pune et je construis des plateformes d'entreprise avec Node.js, TypeScript et PostgreSQL. Mon travail couvre la recherche sémantique par IA, les pipelines de tâches distribuées et les API multi-locataires sécurisées.`,
-a_text2:`J'aime les systèmes mesurables : latence réduite, moins de pièces mobiles, architecture plus propre. Récemment, j'ai dirigé la migration d'un service .NET de 25 000 lignes vers Node.js en moins de quatre mois.`,
-i_title:`L'impact en chiffres`,i_sub:`Chiffres issus de systèmes de production que j'ai construits et maintenus.`,
-m1:`Réduction de la latence de l'API (de 9 000 ms à 15 ms)`,m2:`Parité d'API lors de la migration de .NET vers Node.js (134 routes sur 139)`,m3:`Établissements desservis par le module d'apprentissage`,m4:`Enregistrements gérés par la plateforme de santé numérique`,m5:`API REST dans le microservice du module d'apprentissage`,m6:`Vues matérialisées actualisées toutes les 15 minutes`,m7:`Lignes de code .NET migrées`,m8:`Baisse de la charge de la base de données grâce au cache Redis`,
-e_title:`Expérience`,e_lead:`Ingénieur logiciel Lead`,e_se:`Ingénieur logiciel`,e_now:`Aujourd'hui`,
-cl1:`J'ai conçu une plateforme d'orchestration IA d'entreprise (Node.js, Express, TypeScript, Prisma, PostgreSQL) avec une architecture contrôleur-service-dépôt sur 36 fichiers de routes.`,
-cl2:`J'ai construit une recherche sémantique IA avec les embeddings OpenAI (1 536 dimensions) et OpenSearch k-NN/HNSW : recherche hybride vectorielle + BM25 et clustering jusqu'à 2 500 vecteurs.`,
-cl3:`J'ai dirigé la migration d'un service d'administration .NET de 25 000 lignes vers Node.js/Express 5/TypeScript : 96 % de parité d'API (134 routes sur 139) en moins de 4 mois.`,
-cl4:`J'ai créé le microservice du module d'apprentissage avec Fastify 5 et 29 API REST pour plus de 150 établissements, et conçu un pipeline Document AI avec BullMQ et Redis.`,
-cl5:`J'ai conçu la sécurité avec Okta JWT/JWKS, 4 groupes RBAC et un accès par ligne selon la hiérarchie, et créé 11 vues matérialisées actualisées toutes les 15 minutes.`,
-cl6:`J'ai automatisé la synchronisation des transactions immobilières avec SkySlope : interrogation toutes les 5 minutes, synchronisation des bureaux toutes les 3 heures, tâches BullMQ récurrentes et vérification humaine.`,
-or1:`J'ai construit une plateforme de santé numérique avec plus d'1 M d'enregistrements et 30+ API REST ; le cache Redis a réduit la charge de la base de 30 % et la latence de l'API de 99,8 % (de 9 000 ms à 15 ms).`,
-or2:`J'ai conçu un service de notifications distribué avec BullMQ et Redis : tâches asynchrones, workers concurrents et nouvelles tentatives automatiques.`,or3:`J'ai mis en place l'authentification et l'autorisation par JWT pour protéger les API.`,
-s_title:`Le trajet d'une requête`,s_sub:`La forme des systèmes que je construis, du client à la base de données.`,
-c_title:`Entreprises et produits`,c_sub:`Produits et clients avec lesquels j'ai travaillé via Centralogic.`,
-c_exp:`Agence immobilière en ligne présente dans de nombreux pays. Travaux liés : synchronisation des transactions et pipelines Document AI.`,c_cj:`Plateforme de recrutement et de carrière développée avec Centralogic.`,c_bv:`Produit développé avec Centralogic sur la même pile Node.js, PostgreSQL et IA.`,
-p_title:`Projets`,p1:`Workflows de trading par IA avec données de marché en temps réel, détection d'intention en langage naturel et exécution d'ordres via Claude AI et les API Kite Connect.`,
-p2:`Recherche de biens avec streaming vidéo, filtres avancés et favoris pour plus de 1 000 annonces, envois vidéo de 500 Mo et latence d'API sous 150 ms.`,
-k_title:`Compétences`,k1:`Frontend`,k2:`Backend`,k3:`Données et messagerie`,k4:`Cloud et DevOps`,k5:`Architecture`,k6:`Tests et IA`,
-d_title:`Formation`,d_text:`Licence en applications informatiques`,t_title:`Parlons-en`,t_sub:`Ouvert aux problèmes d'ingénierie stimulants et aux rôles de leadership.`,t_copy:`Copier`,t_ok:`Copié`,t_email:`E-mail`,t_phone:`Téléphone`,f_text:`Conçu et réalisé à Pune.`};
+        /* scroll state: a pure function of scroll position, so it reverses exactly */
+        const scenes = $$(".scene"),
+          focusEls = $$("[data-focus]"),
+          links = $$("nav a");
+        let target = 0,
+          focus = -1,
+          side = 1,
+          dirty = true;
+        const ss = (t) => t * t * (3 - 2 * t),
+          clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+        function measure() {
+          const vh = innerHeight,
+            mid = scrollY + vh / 2;
+          const z = scenes.map((s, i) => {
+            const top = s.offsetTop,
+              h = s.offsetHeight,
+              a = i ? top + Math.min(vh * 0.4, h / 2) : 0;
+            return [a, Math.max(a, i ? top + h - vh * 0.55 : vh * 0.55)];
+          });
+          target = 5;
+          for (let i = 0; i < z.length; i++) {
+            if (mid <= z[i][1]) {
+              target =
+                mid >= z[i][0] || !i
+                  ? i
+                  : i - 1 + ss(clamp((mid - z[i - 1][1]) / (z[i][0] - z[i - 1][1])));
+              break;
+            }
+          }
+          focus = -1;
+          for (const f of focusEls) {
+            const r = f.getBoundingClientRect();
+            if (r.top <= vh * 0.55 && r.bottom > vh * 0.55) focus = +f.dataset.focus;
+          }
+          side = focus >= 0 && focus % 2 ? -1 : 1;
+          $("#progress").style.transform =
+            `scaleX(${clamp(scrollY / (document.documentElement.scrollHeight - vh))})`;
+          let cur = "";
+          for (const id of ["about", "skills", "projects", "labs", "experience", "contact"])
+            if (document.getElementById(id).getBoundingClientRect().top <= vh * 0.5) cur = id;
+          links.forEach((a) =>
+            a.dataset.go === cur
+              ? a.setAttribute("aria-current", "true")
+              : a.removeAttribute("aria-current"),
+          );
+          dirty = true;
+        }
+        addEventListener(
+          "scroll",
+          () => {
+            measure();
+            kick();
+          },
+          { passive: true },
+        );
 
-T.de={n_about:`Über mich`,n_impact:`Wirkung`,n_exp:`Erfahrung`,n_comp:`Unternehmen`,n_proj:`Projekte`,n_contact:`Kontakt`,
-h_greet:`Hallo, ich bin`,h_role:`Lead Software Engineer`,h_tag:`Ich entwerfe Backend-Systeme, KI-Suche und Datenpipelines, die auch im großen Maßstab schnell bleiben.`,h_cta1:`Wirkung ansehen`,h_cta2:`Kontakt aufnehmen`,
-a_title:`Über mich`,a_text:`Ich bin Lead Software Engineer in Pune und entwickle Unternehmensplattformen mit Node.js, TypeScript und PostgreSQL. Meine Arbeit umfasst KI-gestützte semantische Suche, verteilte Job-Pipelines und sichere mandantenfähige APIs.`,
-a_text2:`Ich mag messbare Systeme: geringere Latenz, weniger bewegliche Teile, sauberere Architektur. Zuletzt habe ich die Migration eines .NET-Dienstes mit 25.000 Zeilen nach Node.js in unter vier Monaten geleitet.`,
-i_title:`Wirkung in Zahlen`,i_sub:`Zahlen aus Produktionssystemen, die ich gebaut und betreut habe.`,
-m1:`Reduzierung der API-Latenz (von 9.000 ms auf 15 ms)`,m2:`API-Parität bei der Migration von .NET zu Node.js (134 von 139 Routen)`,m3:`Hochschulen, die das Lernmodul nutzen`,m4:`Datensätze auf der Health-Tech-Plattform`,m5:`REST-APIs im Microservice des Lernmoduls`,m6:`Materialized Views mit Aktualisierung alle 15 Minuten`,m7:`Migrierte Zeilen .NET-Code`,m8:`Weniger Datenbanklast durch Redis-Caching`,
-e_title:`Erfahrung`,e_lead:`Lead Software Engineer`,e_se:`Software Engineer`,e_now:`Heute`,
-cl1:`Ich habe eine KI-Orchestrierungsplattform für Unternehmen mit Node.js, Express, TypeScript, Prisma und PostgreSQL entworfen, mit Controller-Service-Repository-Architektur über 36 Routendateien.`,
-cl2:`Ich habe eine semantische KI-Suche mit OpenAI-Embeddings (1.536 Dimensionen) und OpenSearch k-NN/HNSW gebaut: hybride Vektor- und BM25-Suche sowie Clustering von bis zu 2.500 Vektoren.`,
-cl3:`Ich habe die Migration eines .NET-Admin-Dienstes mit 25.000 Zeilen nach Node.js/Express 5/TypeScript geleitet: 96 % API-Parität (134 von 139 Routen) in unter 4 Monaten.`,
-cl4:`Ich habe den Lernmodul-Microservice mit Fastify 5 und 29 REST-APIs für über 150 Hochschulen gebaut sowie eine Document-AI-Pipeline mit BullMQ und Redis entworfen.`,
-cl5:`Ich habe die Sicherheit mit Okta JWT/JWKS, 4 RBAC-Gruppen und hierarchiebasiertem Zugriff auf Zeilenebene entworfen und 11 Materialized Views mit 15-Minuten-Aktualisierung gebaut.`,
-cl6:`Ich habe die Synchronisierung von Immobilientransaktionen mit SkySlope automatisiert: 5-Minuten-Polling, 3-Stunden-Büro-Sync, wiederkehrende BullMQ-Jobs und menschliche Prüfung.`,
-or1:`Ich habe eine Health-Tech-Plattform mit über 1 Mio. Datensätzen und 30+ REST-APIs gebaut; Redis-Caching senkte die Datenbanklast um 30 % und die API-Latenz um 99,8 % (von 9.000 ms auf 15 ms).`,
-or2:`Ich habe einen verteilten Benachrichtigungsdienst mit BullMQ und Redis entworfen: asynchrone Jobs, parallele Worker und automatische Wiederholungen.`,or3:`Ich habe JWT-basierte Authentifizierung und Autorisierung zum Schutz der APIs umgesetzt.`,
-s_title:`Der Weg einer Anfrage`,s_sub:`Der Aufbau der Systeme, die ich baue, vom Client bis zur Datenbank.`,
-c_title:`Unternehmen und Produkte`,c_sub:`Produkte und Kunden, mit denen ich über Centralogic gearbeitet habe.`,
-c_exp:`Cloudbasierter Immobilienmakler mit Präsenz in vielen Ländern. Verwandte Arbeit: Transaktionssynchronisierung und Document-AI-Pipelines.`,c_cj:`Recruiting- und Karriereplattform, entwickelt mit Centralogic.`,c_bv:`Produkt, entwickelt mit Centralogic auf demselben Stack aus Node.js, PostgreSQL und KI.`,
-p_title:`Projekte`,p1:`KI-gestützte Trading-Workflows mit Echtzeit-Marktdaten, Absichtserkennung in natürlicher Sprache und Orderausführung mit Claude AI und den Kite-Connect-APIs.`,
-p2:`Immobiliensuche mit Video-Streaming, erweiterten Filtern und Lesezeichen für über 1.000 Inserate, 500-MB-Video-Uploads und API-Latenz unter 150 ms.`,
-k_title:`Kenntnisse`,k1:`Frontend`,k2:`Backend`,k3:`Daten und Messaging`,k4:`Cloud und DevOps`,k5:`Architektur`,k6:`Tests und KI`,
-d_title:`Ausbildung`,d_text:`Bachelor of Computer Applications`,t_title:`Lass uns sprechen`,t_sub:`Offen für spannende Engineering-Probleme und Führungsrollen.`,t_copy:`Kopieren`,t_ok:`Kopiert`,t_email:`E-Mail`,t_phone:`Telefon`,f_text:`In Pune entworfen und gebaut.`};
+        let kick = () => {};
+        addEventListener("resize", () => {
+          measure();
+          kick();
+        });
+        measure();
+        route();
+        if (location.hash && !location.hash.startsWith("#lab-")) {
+          const t = document.getElementById(location.hash.slice(1));
+          t && t.scrollIntoView({ behavior: "instant" });
+        }
 
-T.pt={n_about:`Sobre`,n_impact:`Impacto`,n_exp:`Experiência`,n_comp:`Empresas`,n_proj:`Projetos`,n_contact:`Contato`,
-h_greet:`Olá, eu sou`,h_role:`Engenheiro de software líder`,h_tag:`Projeto sistemas backend, busca com IA e pipelines de dados que continuam rápidos em escala.`,h_cta1:`Ver o impacto`,h_cta2:`Entrar em contato`,
-a_title:`Sobre mim`,a_text:`Sou engenheiro de software líder em Pune e crio plataformas corporativas com Node.js, TypeScript e PostgreSQL. Meu trabalho abrange busca semântica com IA, pipelines distribuídos de tarefas e APIs multi-inquilino seguras.`,
-a_text2:`Gosto de sistemas mensuráveis: menor latência, menos peças, arquitetura mais limpa. Recentemente liderei a migração de um serviço .NET de 25 mil linhas para Node.js em menos de quatro meses.`,
-i_title:`Impacto em números`,i_sub:`Números de sistemas em produção que construí e mantive.`,
-m1:`Redução da latência da API (de 9.000 ms para 15 ms)`,m2:`Paridade de API na migração de .NET para Node.js (134 de 139 rotas)`,m3:`Instituições atendidas pelo módulo de aprendizagem`,m4:`Registros tratados pela plataforma de saúde digital`,m5:`APIs REST no microsserviço do módulo de aprendizagem`,m6:`Views materializadas atualizadas a cada 15 minutos`,m7:`Linhas de código .NET migradas`,m8:`Redução da carga do banco de dados com cache Redis`,
-e_title:`Experiência`,e_lead:`Engenheiro de software líder`,e_se:`Engenheiro de software`,e_now:`Atual`,
-cl1:`Projetei uma plataforma corporativa de orquestração de IA com Node.js, Express, TypeScript, Prisma e PostgreSQL, com arquitetura controller-service-repository em 36 arquivos de rotas.`,
-cl2:`Construí busca semântica com IA usando embeddings da OpenAI (1.536 dimensões) e OpenSearch k-NN/HNSW, com busca híbrida vetorial + BM25 e clustering de até 2.500 vetores.`,
-cl3:`Liderei a migração de um serviço de administração .NET de 25 mil linhas para Node.js/Express 5/TypeScript: 96% de paridade de API (134 de 139 rotas) em menos de 4 meses.`,
-cl4:`Criei o microsserviço do módulo de aprendizagem com Fastify 5 e 29 APIs REST para mais de 150 instituições, e projetei um pipeline de Document AI com BullMQ e Redis.`,
-cl5:`Projetei a segurança com Okta JWT/JWKS, 4 grupos RBAC e acesso em nível de linha por hierarquia, e criei 11 views materializadas atualizadas a cada 15 minutos.`,
-cl6:`Automatizei a sincronização de transações imobiliárias com o SkySlope: consulta a cada 5 minutos, sincronização de escritórios a cada 3 horas, jobs BullMQ recorrentes e verificação humana.`,
-or1:`Construí uma plataforma de saúde digital com mais de 1 milhão de registros e 30+ APIs REST; o cache Redis reduziu a carga do banco em 30% e a latência da API em 99,8% (de 9.000 ms para 15 ms).`,
-or2:`Projetei um serviço de notificações distribuído com BullMQ e Redis: jobs assíncronos, workers concorrentes e novas tentativas automáticas.`,or3:`Implementei autenticação e autorização com JWT para proteger as APIs.`,
-s_title:`A jornada de uma requisição`,s_sub:`A forma dos sistemas que construo, do cliente ao banco de dados.`,
-c_title:`Empresas e produtos`,c_sub:`Produtos e clientes com os quais trabalhei por meio da Centralogic.`,
-c_exp:`Imobiliária em nuvem com atuação em vários países. Trabalho relacionado: sincronização de transações e pipelines de Document AI.`,c_cj:`Plataforma de recrutamento e carreira desenvolvida com a Centralogic.`,c_bv:`Produto desenvolvido com a Centralogic sobre a mesma stack de Node.js, PostgreSQL e IA.`,
-p_title:`Projetos`,p1:`Fluxos de trading com IA, com dados de mercado em tempo real, detecção de intenção em linguagem natural e execução de ordens usando Claude AI e as APIs do Kite Connect.`,
-p2:`Descoberta de imóveis com streaming de vídeo, filtros avançados e favoritos para mais de 1.000 anúncios, uploads de vídeo de 500 MB e latência de API abaixo de 150 ms.`,
-k_title:`Habilidades`,k1:`Frontend`,k2:`Backend`,k3:`Dados e mensageria`,k4:`Nuvem e DevOps`,k5:`Arquitetura`,k6:`Testes e IA`,
-d_title:`Formação`,d_text:`Bacharelado em Aplicações de Computação`,t_title:`Vamos conversar`,t_sub:`Aberto a problemas de engenharia interessantes e funções de liderança.`,t_copy:`Copiar`,t_ok:`Copiado`,t_email:`E-mail`,t_phone:`Telefone`,f_text:`Projetado e construído em Pune.`};
-T.ja={n_about:`概要`,n_impact:`実績`,n_exp:`経歴`,n_comp:`企業`,n_proj:`プロジェクト`,n_contact:`連絡先`,
-h_greet:`はじめまして、`,h_role:`リードソフトウェアエンジニア`,h_tag:`大規模でも高速さを保つバックエンドシステム、AI検索、データパイプラインを設計しています。`,h_cta1:`実績を見る`,h_cta2:`連絡する`,
-a_title:`概要`,a_text:`プネを拠点とするリードソフトウェアエンジニアとして、Node.js、TypeScript、PostgreSQLでエンタープライズ向けプラットフォームを構築しています。AIによるセマンティック検索、分散ジョブパイプライン、安全なマルチテナントAPIまで幅広く手がけています。`,
-a_text2:`計測できるシステムが好きです。低レイテンシ、少ない構成要素、整理されたアーキテクチャ。最近では、2万5千行の.NETサービスを4か月未満でNode.jsへ移行するプロジェクトを率いました。`,
-i_title:`数字で見る実績`,i_sub:`構築・運用してきた本番システムの数値です。`,
-m1:`APIレイテンシの削減(9,000 msから15 ms)`,m2:`.NETからNode.jsへの移行でのAPI互換率(139ルート中134)`,m3:`学習モジュールが利用されているカレッジ数`,m4:`ヘルステック基盤で扱ったレコード数`,m5:`学習モジュールのマイクロサービスのREST API数`,m6:`15分ごとに更新するマテリアライズドビュー`,m7:`移行した.NETコードの行数`,m8:`Redisキャッシュによるデータベース負荷の削減`,
-e_title:`経歴`,e_lead:`リードソフトウェアエンジニア`,e_se:`ソフトウェアエンジニア`,e_now:`現在`,
-cl1:`Node.js、Express、TypeScript、Prisma、PostgreSQLでエンタープライズ向けAIオーケストレーション基盤を設計し、36のルートファイルをコントローラー・サービス・リポジトリ構成で整理しました。`,
-cl2:`OpenAIエンベディング(1,536次元)とOpenSearch k-NN/HNSWでAIセマンティック検索を構築。ベクトル検索とBM25のハイブリッド検索と、最大2,500ベクトルのクラスタリングを実装しました。`,
-cl3:`2万5千行の.NET管理サービスをNode.js/Express 5/TypeScriptへ移行する取り組みを主導し、4か月未満でAPI互換率96%(139ルート中134)を達成しました。`,
-cl4:`Fastify 5で学習モジュールのマイクロサービスを構築し、150以上のカレッジ向けに29のREST APIを提供。BullMQとRedisでDocument AIパイプラインも設計しました。`,
-cl5:`Okta JWT/JWKS、4つのRBACグループ、階層に基づく行レベルアクセス制御でセキュリティを設計し、15分ごとに更新する11のマテリアライズドビューを構築しました。`,
-cl6:`SkySlopeとの不動産取引同期を自動化。5分間隔のポーリング、3時間ごとの拠点同期、繰り返し実行するBullMQジョブ、人による確認を組み合わせました。`,
-or1:`100万件以上のレコードと30以上のREST APIを扱うヘルステック基盤を構築。Redisキャッシュでデータベース負荷を30%、APIレイテンシを99.8%削減しました(9,000 msから15 ms)。`,
-or2:`BullMQとRedisで分散通知サービスを設計し、非同期ジョブ、並列ワーカー、自動リトライを実現しました。`,or3:`JWTベースの認証・認可を実装し、APIを保護しました。`,
-s_title:`リクエストの流れ`,s_sub:`クライアントからデータベースまで、私が構築するシステムの構造です。`,
-c_title:`企業とプロダクト`,c_sub:`Centralogicを通じて関わってきたプロダクトとクライアントです。`,
-c_exp:`多くの国で事業を展開するクラウド型の不動産仲介会社。関連する取り組み:取引同期とDocument AIパイプライン。`,c_cj:`Centralogicとともに開発した採用・キャリアプラットフォーム。`,c_bv:`Centralogicとともに開発した、同じNode.js・PostgreSQL・AI基盤のプロダクト。`,
-p_title:`プロジェクト`,p1:`リアルタイム市場データ、自然言語による意図検出、注文執行を備えたAIトレーディングワークフロー。Claude AIとKite Connect APIを使用。`,
-p2:`1,000件以上の物件向けに、動画配信、高度な絞り込み、ブックマークを提供する物件検索。500 MBの動画アップロードに対応し、APIレイテンシは150 ms未満。`,
-k_title:`スキル`,k1:`フロントエンド`,k2:`バックエンド`,k3:`データとメッセージング`,k4:`クラウドとDevOps`,k5:`アーキテクチャ`,k6:`テストとAI`,
-d_title:`学歴`,d_text:`コンピュータアプリケーション学士`,t_title:`お話ししましょう`,t_sub:`面白いエンジニアリング課題やリーダー職に関心があります。`,t_copy:`コピー`,t_ok:`コピーしました`,t_email:`メール`,t_phone:`電話`,f_text:`プネで設計・制作しました。`};
+        /* 3D sculpture */
+        if (!window.THREE) return;
+        const T = THREE;
+        let renderer;
+        try {
+          renderer = new T.WebGLRenderer({
+            antialias: true,
+            alpha: true,
+            powerPreference: "high-performance",
+          });
+        } catch (e) {
+          return;
+        }
+        renderer.setPixelRatio(Math.min(devicePixelRatio, innerWidth < 900 ? 1.4 : 1.75));
+        renderer.toneMapping = T.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.05;
+        renderer.outputEncoding = T.sRGBEncoding;
+        renderer.shadowMap.enabled = innerWidth >= 900;
+        renderer.shadowMap.type = T.PCFSoftShadowMap;
+        $("#stage").append(renderer.domElement);
+        const scene = new T.Scene(),
+          cam = new T.PerspectiveCamera(36, 1, 0.1, 100);
 
-T.zh={n_about:`关于`,n_impact:`成果`,n_exp:`经历`,n_comp:`公司`,n_proj:`项目`,n_contact:`联系`,
-h_greet:`你好,我是`,h_role:`Lead 软件工程师`,h_tag:`我设计后端系统、AI 搜索和数据管道,在大规模下依然保持高速。`,h_cta1:`查看成果`,h_cta2:`联系我`,
-a_title:`关于我`,a_text:`我是常驻浦那的 Lead 软件工程师,使用 Node.js、TypeScript 和 PostgreSQL 构建企业级平台。工作涵盖 AI 语义搜索、分布式任务管道和安全的多租户 API。`,
-a_text2:`我喜欢可衡量的系统:更低的延迟、更少的组件、更清晰的架构。最近我牵头在不到四个月内,把一个 2.5 万行的 .NET 服务迁移到 Node.js。`,
-i_title:`数字中的成果`,i_sub:`来自我构建并维护的生产系统的数据。`,
-m1:`API 延迟降低(从 9,000 ms 到 15 ms)`,m2:`.NET 迁移到 Node.js 的 API 一致率(139 个路由中的 134 个)`,m3:`使用学习模块的学院数量`,m4:`健康科技平台处理的记录数`,m5:`学习模块微服务中的 REST API 数量`,m6:`每 15 分钟刷新一次的物化视图`,m7:`已迁移的 .NET 代码行数`,m8:`Redis 缓存带来的数据库负载降幅`,
-e_title:`经历`,e_lead:`Lead 软件工程师`,e_se:`软件工程师`,e_now:`至今`,
-cl1:`使用 Node.js、Express、TypeScript、Prisma 和 PostgreSQL 设计企业级 AI 编排平台,将 36 个路由文件组织为控制器-服务-仓储架构。`,
-cl2:`基于 OpenAI 向量(1,536 维)和 OpenSearch k-NN/HNSW 构建 AI 语义搜索,支持向量 + BM25 混合检索,以及最多 2,500 个向量的聚类。`,
-cl3:`牵头将 2.5 万行的 .NET 管理服务迁移到 Node.js/Express 5/TypeScript,在不到 4 个月内实现 96% 的 API 一致率(139 个路由中的 134 个)。`,
-cl4:`使用 Fastify 5 构建学习模块微服务,为 150 多所学院提供 29 个 REST API;并基于 BullMQ 和 Redis 设计 Document AI 处理管道。`,
-cl5:`使用 Okta JWT/JWKS、4 个 RBAC 组和基于层级的行级访问控制设计安全架构,并构建 11 个每 15 分钟刷新的物化视图。`,
-cl6:`自动化与 SkySlope 的房地产交易同步:5 分钟轮询、3 小时办公室同步、可重复的 BullMQ 任务和人工审核。`,
-or1:`构建处理 100 万以上记录、拥有 30 多个 REST API 的健康科技平台;Redis 缓存使数据库负载降低 30%,API 延迟降低 99.8%(从 9,000 ms 到 15 ms)。`,
-or2:`使用 BullMQ 和 Redis 设计分布式通知服务:异步任务、并发工作进程和自动重试。`,or3:`实现基于 JWT 的身份验证和授权,保护 API。`,
-s_title:`一次请求的旅程`,s_sub:`我构建的系统结构,从客户端到数据库。`,
-c_title:`公司与产品`,c_sub:`通过 Centralogic 合作过的产品与客户。`,
-c_exp:`业务遍及多个国家的云端房地产经纪公司。相关工作:交易同步与 Document AI 管道。`,c_cj:`与 Centralogic 共同打造的招聘与职业平台。`,c_bv:`与 Centralogic 共同打造的产品,基于相同的 Node.js、PostgreSQL 和 AI 技术栈。`,
-p_title:`项目`,p1:`AI 交易工作流:实时行情数据、自然语言意图识别和下单执行,使用 Claude AI 与 Kite Connect API。`,
-p2:`房源发现,支持视频流、高级筛选和收藏,覆盖 1,000 多条房源,支持 500 MB 视频上传,API 延迟低于 150 ms。`,
-k_title:`技能`,k1:`前端`,k2:`后端`,k3:`数据与消息`,k4:`云与 DevOps`,k5:`架构`,k6:`测试与 AI`,
-d_title:`教育`,d_text:`计算机应用学士`,t_title:`聊一聊`,t_sub:`欢迎有趣的工程难题和领导岗位机会。`,t_copy:`复制`,t_ok:`已复制`,t_email:`邮箱`,t_phone:`电话`,f_text:`在浦那设计并制作。`};
+        /* studio environment for chrome reflections */
+        const studio = new T.Scene();
+        studio.background = new T.Color(0x07080c);
+        const panel = (c, k, w, h, x, y, z) => {
+          const m = new T.Mesh(
+            new T.PlaneGeometry(w, h),
+            new T.MeshBasicMaterial({
+              color: new T.Color(c).multiplyScalar(k),
+              side: T.DoubleSide,
+            }),
+          );
+          m.position.set(x, y, z);
+          m.lookAt(0, 0, 0);
+          studio.add(m);
+        };
+        panel(0xffffff, 3.2, 10, 2.2, 0, 9, 3);
+        panel(0xdde4f0, 2, 2, 12, -10, 1, 2);
+        panel(0x789bff, 2.6, 3, 9, 10, 0, -3);
+        panel(0x56d6e8, 1.4, 9, 1, 0, -7, -6);
+        panel(0xffffff, 1.3, 1, 8, 6, 2, 8);
+        panel(0x8d96a8, 0.7, 14, 6, 0, -2, 11);
+        scene.environment = new T.PMREMGenerator(renderer).fromScene(studio, 0.035).texture;
 
-T.ar={n_about:`نبذة`,n_impact:`الأثر`,n_exp:`الخبرة`,n_comp:`الشركات`,n_proj:`المشاريع`,n_contact:`تواصل`,
-h_greet:`مرحبًا، أنا`,h_role:`مهندس برمجيات رئيسي`,h_tag:`أصمم أنظمة خلفية وبحثًا بالذكاء الاصطناعي وخطوط بيانات تبقى سريعة على نطاق واسع.`,h_cta1:`شاهد الأثر`,h_cta2:`تواصل معي`,
-a_title:`نبذة عني`,a_text:`أنا مهندس برمجيات رئيسي مقيم في بيون، أبني منصات للمؤسسات باستخدام Node.js وTypeScript وPostgreSQL. يشمل عملي البحث الدلالي المدعوم بالذكاء الاصطناعي، وخطوط المهام الموزعة، وواجهات API آمنة متعددة المستأجرين.`,
-a_text2:`أحب الأنظمة القابلة للقياس: زمن استجابة أقل، وأجزاء أقل، وبنية أنظف. مؤخرًا قدت ترحيل خدمة .NET من 25 ألف سطر إلى Node.js في أقل من أربعة أشهر.`,
-i_title:`الأثر بالأرقام`,i_sub:`أرقام من أنظمة إنتاج بنيتها وصنتها.`,
-m1:`انخفاض زمن استجابة API (من 9,000 مللي ثانية إلى 15)`,m2:`تطابق API في الترحيل من .NET إلى Node.js (134 من 139 مسارًا)`,m3:`كليات تستخدم وحدة التعلم`,m4:`سجلات تعالجها منصة التقنية الصحية`,m5:`واجهات REST API في الخدمة المصغرة لوحدة التعلم`,m6:`Materialized Views تُحدَّث كل 15 دقيقة`,m7:`أسطر شيفرة .NET تم ترحيلها`,m8:`انخفاض حمل قاعدة البيانات بفضل التخزين المؤقت في Redis`,
-e_title:`الخبرة`,e_lead:`مهندس برمجيات رئيسي`,e_se:`مهندس برمجيات`,e_now:`حتى الآن`,
-cl1:`صممت منصة تنسيق ذكاء اصطناعي للمؤسسات باستخدام Node.js وExpress وTypeScript وPrisma وPostgreSQL، ببنية متحكم-خدمة-مستودع عبر 36 ملف مسارات.`,
-cl2:`بنيت بحثًا دلاليًا بالذكاء الاصطناعي باستخدام تضمينات OpenAI (1,536 بُعدًا) وOpenSearch k-NN/HNSW، مع بحث هجين بالمتجهات وBM25 وتجميع يصل إلى 2,500 متجه.`,
-cl3:`قدت ترحيل خدمة إدارة .NET من 25 ألف سطر إلى Node.js/Express 5/TypeScript، بتطابق API بنسبة 96% (134 من 139 مسارًا) في أقل من 4 أشهر.`,
-cl4:`بنيت خدمة وحدة التعلم المصغرة بـ Fastify 5 مع 29 واجهة REST API لأكثر من 150 كلية، وصممت خط معالجة Document AI باستخدام BullMQ وRedis.`,
-cl5:`صممت الأمان باستخدام Okta JWT/JWKS و4 مجموعات RBAC وتحكم وصول على مستوى الصف حسب التسلسل الهرمي، وبنيت 11 Materialized View تُحدَّث كل 15 دقيقة.`,
-cl6:`أتمتّ مزامنة معاملات العقارات مع SkySlope: استطلاع كل 5 دقائق، ومزامنة المكاتب كل 3 ساعات، ومهام BullMQ متكررة، وتحقق بشري.`,
-or1:`بنيت منصة تقنية صحية تعالج أكثر من مليون سجل وأكثر من 30 واجهة REST API؛ خفّض التخزين المؤقت في Redis حمل قاعدة البيانات 30% وزمن استجابة API بنسبة 99.8% (من 9,000 مللي ثانية إلى 15).`,
-or2:`صممت خدمة إشعارات موزعة باستخدام BullMQ وRedis: مهام غير متزامنة، وعمال متزامنون، وإعادة محاولة تلقائية.`,or3:`نفذت مصادقة وتفويضًا قائمين على JWT لحماية واجهات API.`,
-s_title:`رحلة الطلب`,s_sub:`شكل الأنظمة التي أبنيها، من العميل إلى قاعدة البيانات.`,
-c_title:`الشركات والمنتجات`,c_sub:`منتجات وعملاء عملت معهم عبر Centralogic.`,
-c_exp:`شركة وساطة عقارية سحابية تعمل في دول عديدة. أعمال ذات صلة: مزامنة المعاملات وخطوط Document AI.`,c_cj:`منصة توظيف ومسارات مهنية طُوّرت مع Centralogic.`,c_bv:`منتج طُوّر مع Centralogic على حزمة Node.js وPostgreSQL والذكاء الاصطناعي نفسها.`,
-p_title:`المشاريع`,p1:`تدفقات تداول مدعومة بالذكاء الاصطناعي مع بيانات سوق فورية، واكتشاف النية من اللغة الطبيعية، وتنفيذ الأوامر عبر Claude AI وواجهات Kite Connect.`,
-p2:`اكتشاف العقارات مع بث الفيديو وتصفية متقدمة وإشارات مرجعية لأكثر من 1,000 إعلان، ورفع فيديو حتى 500 ميغابايت، وزمن استجابة API أقل من 150 مللي ثانية.`,
-k_title:`المهارات`,k1:`الواجهة الأمامية`,k2:`الواجهة الخلفية`,k3:`البيانات والمراسلة`,k4:`السحابة وDevOps`,k5:`البنية المعمارية`,k6:`الاختبار والذكاء الاصطناعي`,
-d_title:`التعليم`,d_text:`بكالوريوس في تطبيقات الحاسوب`,t_title:`لنتحدث`,t_sub:`منفتح على مشكلات هندسية مثيرة وأدوار قيادية.`,t_copy:`نسخ`,t_ok:`تم النسخ`,t_email:`البريد`,t_phone:`الهاتف`,f_text:`صُمم وبُني في بيون.`};
-(function(){
-const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
-const root=document.documentElement;
-const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
-const LANGS=[['en','English'],['hi','हिन्दी'],['mr','मराठी'],['es','Español'],['fr','Français'],['de','Deutsch'],['ja','日本語'],['zh','中文'],['ar','العربية'],['pt','Português']];
-const CL={IN:'hi',ES:'es',MX:'es',AR:'es',CO:'es',CL:'es',PE:'es',FR:'fr',DE:'de',AT:'de',CH:'de',JP:'ja',CN:'zh',TW:'zh',HK:'zh',SA:'ar',AE:'ar',EG:'ar',QA:'ar',KW:'ar',BR:'pt',PT:'pt'};
-const TZ={'Asia/Calcutta':'IN','Asia/Kolkata':'IN','Europe/Madrid':'ES','America/Mexico_City':'MX','America/Bogota':'CO','America/Santiago':'CL','America/Lima':'PE','America/Argentina/Buenos_Aires':'AR','Europe/Paris':'FR','Europe/Berlin':'DE','Europe/Vienna':'AT','Europe/Zurich':'CH','Asia/Tokyo':'JP','Asia/Shanghai':'CN','Asia/Taipei':'TW','Asia/Hong_Kong':'HK','Asia/Riyadh':'SA','Asia/Dubai':'AE','Africa/Cairo':'EG','Asia/Qatar':'QA','Asia/Kuwait':'KW','America/Sao_Paulo':'BR','Europe/Lisbon':'PT'};
+        const key = new T.DirectionalLight(0xffffff, 1.1);
+        key.position.set(4, 7, 6);
+        key.castShadow = true;
+        key.shadow.mapSize.set(1024, 1024);
+        Object.assign(key.shadow.camera, { left: -7, right: 7, top: 7, bottom: -7 });
+        key.shadow.bias = -0.0008;
+        key.shadow.radius = 4;
+        scene.add(key);
+        const rim = new T.PointLight(0x789bff, 2.2, 22);
+        rim.position.set(-5, -2, -3);
+        scene.add(rim);
+        const glowL = new T.PointLight(0x56d6e8, 1.5, 7);
+        scene.add(glowL);
 
-/* ---------- language ---------- */
-const sel=$('#lang');
-LANGS.forEach(function(l){const o=document.createElement('option');o.value=l[0];o.textContent=l[1];sel.appendChild(o)});
-$$('[data-i]').forEach(function(el){el._en=el.textContent});
-function detect(){
-  try{const s=localStorage.getItem('ku-lang'); if(s&&(s==='en'||T[s])) return s;}catch(e){}
-  const langs=(navigator.languages&&navigator.languages.length)?navigator.languages:[navigator.language||'en'];
-  for(const l of langs){const b=String(l).toLowerCase().split('-')[0]; if(b!=='en'&&T[b]) return b;}
-  let region=null;
-  try{region=TZ[Intl.DateTimeFormat().resolvedOptions().timeZone]||null}catch(e){}
-  if(!region){const m=String(langs[0]||'').split('-')[1]; if(m) region=m.toUpperCase();}
-  return CL[region]||'en';
-}
-function apply(l){
-  root.lang=l; root.dir=(l==='ar')?'rtl':'ltr';
-  root.dataset.script=['en','es','fr','de','pt'].indexOf(l)>-1?'latin':'other';
-  $$('[data-i]').forEach(function(el){el.textContent=(l==='en')?el._en:((T[l]&&T[l][el.dataset.i])||el._en)});
-  sel.value=l;
-}
-sel.addEventListener('change',function(){apply(sel.value);try{localStorage.setItem('ku-lang',sel.value)}catch(e){}});
-apply(detect());
+        const mat = (c, r, extra) =>
+          new T.MeshStandardMaterial(
+            Object.assign({ color: c, metalness: 1, roughness: r }, extra),
+          );
+        const chrome = mat(0xdfe5ee, 0.09),
+          brushed = mat(0x9aa4b4, 0.3),
+          dark = mat(0x39414f, 0.24);
+        const energy = new T.MeshBasicMaterial({ color: 0x8fe9f5 });
+        const lineMat = (o, c = 0x789bff) =>
+          new T.LineBasicMaterial({
+            color: c,
+            transparent: true,
+            opacity: o,
+            blending: T.AdditiveBlending,
+            depthWrite: false,
+          });
+        const mesh = (g, m, p) => {
+          const o = new T.Mesh(g, m);
+          o.castShadow = o.receiveShadow = true;
+          p && p.add(o);
+          return o;
+        };
+        const V = (x, y, z) => new T.Vector3(x, y, z);
+        const edges = (g, m) => new T.LineSegments(new T.EdgesGeometry(g), m);
 
-/* ---------- theme + menu + progress ---------- */
-try{const t=localStorage.getItem('ku-theme'); if(t) root.dataset.theme=t;}catch(e){}
-$('#theme').addEventListener('click',function(){
-  const cur=root.dataset.theme||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
-  const nx=cur==='dark'?'light':'dark'; root.dataset.theme=nx;
-  try{localStorage.setItem('ku-theme',nx)}catch(e){}
-});
-const nav=$('#nav'), menu=$('#menu');
-menu.addEventListener('click',function(){const o=nav.classList.toggle('open');menu.setAttribute('aria-expanded',o)});
-$$('#nav a').forEach(function(a){a.addEventListener('click',function(){nav.classList.remove('open');menu.setAttribute('aria-expanded',false)})});
-function prog(){const h=root.scrollHeight-innerHeight; root.style.setProperty('--p',h>0?Math.min(1,scrollY/h):0)}
-addEventListener('scroll',prog,{passive:true}); prog();
+        function glowTex(rgb) {
+          const c = document.createElement("canvas");
+          c.width = c.height = 128;
+          const x = c.getContext("2d"),
+            g = x.createRadialGradient(64, 64, 0, 64, 64, 64);
+          g.addColorStop(0, `rgba(${rgb},1)`);
+          g.addColorStop(0.35, `rgba(${rgb},.28)`);
+          g.addColorStop(1, `rgba(${rgb},0)`);
+          x.fillStyle = g;
+          x.fillRect(0, 0, 128, 128);
+          return new T.CanvasTexture(c);
+        }
+        const sprite = (tex, s, o) => {
+          const sp = new T.Sprite(
+            new T.SpriteMaterial({
+              map: tex,
+              transparent: true,
+              opacity: o,
+              blending: T.AdditiveBlending,
+              depthWrite: false,
+            }),
+          );
+          sp.scale.set(s, s, 1);
+          return sp;
+        };
+        const blueTex = glowTex("120,155,255"),
+          cyanTex = glowTex("86,214,232");
+        const halo = sprite(blueTex, 10, 0.2);
+        halo.position.z = -2.5;
+        scene.add(halo);
 
-/* ---------- marquee clones ---------- */
-$$('.marq .row, .ticker .row').forEach(function(r){r.innerHTML+=r.innerHTML});
+        const root = new T.Group();
+        scene.add(root);
+        /* core: faceted heart, gyroscope rings, cage of eight shell plates */
+        const core = new T.Group();
+        root.add(core);
+        const heart = mesh(
+          new T.IcosahedronGeometry(0.62, 0),
+          mat(0xeef2f8, 0.06, { flatShading: true }),
+          core,
+        );
+        const heartWire = edges(new T.IcosahedronGeometry(0.66, 0), lineMat(0.9, 0x56d6e8));
+        core.add(heartWire);
+        core.add(sprite(cyanTex, 2.1, 0.35));
+        const gyro = [0.86, 1.02, 1.18].map((r, i) => {
+          const g = mesh(new T.TorusGeometry(r, 0.025, 12, 96), i === 1 ? dark : chrome, core);
+          g.rotation.set(i * 1.1, i * 0.7, 0);
+          return g;
+        });
+        const shells = [];
+        const oct = new T.OctahedronGeometry(1.55, 0).toNonIndexed().attributes.position;
+        for (let f = 0; f < 8; f++) {
+          const v = [0, 1, 2].map((j) => V().fromBufferAttribute(oct, f * 3 + j));
+          const c = v[0].clone().add(v[1]).add(v[2]).divideScalar(3);
+          const g = new T.Group();
+          v.forEach((a, j) => {
+            const b = v[(j + 1) % 3],
+              p = a.clone().lerp(c, 0.1),
+              q = b.clone().lerp(c, 0.1),
+              d = q.clone().sub(p);
+            const bar = mesh(new T.CylinderGeometry(0.045, 0.045, d.length(), 10), chrome, g);
+            bar.position.copy(p).add(q).multiplyScalar(0.5);
+            bar.quaternion.setFromUnitVectors(V(0, 1, 0), d.normalize());
+            mesh(new T.SphereGeometry(0.075, 16, 12), brushed, g).position.copy(p);
+          });
+          if (f % 2 === 0) {
+            const pg = new T.BufferGeometry().setFromPoints(v.map((a) => a.clone().lerp(c, 0.4)));
+            pg.computeVertexNormals();
+            mesh(pg, mat(0x6c7789, 0.18, { side: T.DoubleSide, flatShading: true }), g);
+          }
+          g.userData.dir = c.normalize();
+          core.add(g);
+          shells.push(g);
+        }
 
-/* ---------- reveal + counters ---------- */
-function count(el){
-  const to=parseFloat(el.dataset.to), dec=parseInt(el.dataset.dec||'0',10), suf=el.dataset.suf||'';
-  if(RM){return}
-  const t0=performance.now(), d=1400;
-  (function tick(now){
-    const p=Math.min(1,(now-t0)/d), e=1-Math.pow(1-p,3);
-    el.textContent=(to*e).toFixed(dec)+suf;
-    if(p<1) requestAnimationFrame(tick); else el.textContent=to.toFixed(dec)+suf;
-  })(t0);
-}
-if('IntersectionObserver' in window){
-  const io=new IntersectionObserver(function(es){es.forEach(function(e){
-    if(!e.isIntersecting) return; io.unobserve(e.target);
-    e.target.classList.add('in');
-    const n=$('.num',e.target); if(n) count(n);
-  })},{threshold:.25});
-  $$('.reveal').forEach(function(el){io.observe(el)});
-}else{$$('.reveal').forEach(function(el){el.classList.add('in')})}
+        /* six discipline modules */
+        const builders = [
+          (g) => {
+            for (let i = -1; i <= 1; i++) {
+              const m = mesh(new T.CylinderGeometry(0.5, 0.5, 0.17, 6), i ? chrome : dark, g);
+              m.position.y = i * 0.26;
+              m.rotation.y = i * 0.3;
+            }
+          },
+          (g) => {
+            for (let i = -1; i <= 1; i++) {
+              mesh(new T.CylinderGeometry(0.42, 0.42, 0.2, 40), chrome, g).position.y = i * 0.28;
+              const r = mesh(new T.TorusGeometry(0.425, 0.012, 8, 48), energy, g);
+              r.rotation.x = Math.PI / 2;
+              r.position.y = i * 0.28 + 0.105;
+            }
+          },
+          (g) => {
+            mesh(new T.BoxGeometry(0.42, 0.42, 0.42), chrome, g);
+            [0.7, 0.96].forEach((s, i) => {
+              const e = edges(new T.BoxGeometry(s, s, s), lineMat(0.75 - i * 0.3, 0xc7ced8));
+              e.rotation.set(i * 0.4, 0.5 + i * 0.3, 0);
+              g.add(e);
+            });
+          },
+          (g) => {
+            [
+              [0, 0, 0, 0.3],
+              [0.38, 0.18, 0.1, 0.21],
+              [-0.37, 0.1, -0.12, 0.23],
+              [0.1, -0.34, 0.22, 0.17],
+              [-0.12, 0.38, 0.14, 0.15],
+            ].forEach(([x, y, z, r], i) =>
+              mesh(new T.SphereGeometry(r, 32, 24), i % 2 ? brushed : chrome, g).position.set(
+                x,
+                y,
+                z,
+              ),
+            );
+          },
+          (g) => {
+            mesh(new T.TorusKnotGeometry(0.32, 0.085, 120, 16), chrome, g);
+          },
+          (g) => {
+            for (let i = 0; i < 3; i++) {
+              const m = mesh(new T.BoxGeometry(0.78, 0.54, 0.05), i === 1 ? dark : chrome, g);
+              m.position.set((i - 1) * 0.12, (i - 1) * 0.12, (i - 1) * 0.24);
+            }
+          },
+        ];
+        /* project environments, one per module */
+        const pts = (a, s, c) =>
+          new T.Points(
+            new T.BufferGeometry().setFromPoints(a),
+            new T.PointsMaterial({
+              color: c,
+              size: s,
+              transparent: true,
+              opacity: 0.9,
+              blending: T.AdditiveBlending,
+              depthWrite: false,
+            }),
+          );
+        const segs = (a, o) =>
+          new T.LineSegments(new T.BufferGeometry().setFromPoints(a), lineMat(o));
+        const rnd = (() => {
+          let s = 7;
+          return () => (s = (s * 16807) % 2147483647) / 2147483647;
+        })();
+        const onSphere = (r) => {
+          const u = rnd() * 2 - 1,
+            a = rnd() * 6.283,
+            k = Math.sqrt(1 - u * u);
+          return V(k * Math.cos(a) * r, u * r, k * Math.sin(a) * r);
+        };
+        const envs = [
+          (g) => {
+            const a = Array.from({ length: 380 }, () => onSphere(1 + rnd() * 0.45));
+            g.add(pts(a, 0.045, 0x56d6e8));
+            const l = [];
+            a.slice(0, 26).forEach((p) => l.push(V(0, 0, 0), p));
+            g.add(segs(l, 0.22));
+          },
+          (g) => {
+            for (let i = 0; i < 7; i++) {
+              const a = (i / 7) * 6.283,
+                p = new T.Group();
+              p.position.set(Math.cos(a) * 1.25, Math.sin(i * 2) * 0.35, Math.sin(a) * 1.25);
+              p.rotation.y = -a + 1.57;
+              p.add(edges(new T.PlaneGeometry(0.55, 0.74), lineMat(0.85, 0xc7ced8)));
+              const l = [];
+              for (let j = 0; j < 5; j++)
+                l.push(V(-0.19, 0.22 - j * 0.11, 0), V(j % 2 ? 0.1 : 0.19, 0.22 - j * 0.11, 0));
+              p.add(segs(l, 0.8));
+              g.add(p);
+            }
+          },
+          (g) => {
+            const n = Array.from({ length: 8 }, (_, i) =>
+              V(
+                Math.cos((i / 8) * 6.283) * 1.35,
+                i % 2 ? 0.45 : -0.45,
+                Math.sin((i / 8) * 6.283) * 1.35,
+              ),
+            );
+            n.forEach((p) => mesh(new T.OctahedronGeometry(0.13), energy, g).position.copy(p));
+            const l = [];
+            n.forEach((p, i) => l.push(p, n[(i + 1) % 8], p, n[(i + 3) % 8]));
+            g.add(segs(l, 0.38));
+          },
+          (g) => {
+            const l = [],
+              n = [];
+            const grow = (p, d, s) => {
+              n.push(p);
+              if (d > 2) return;
+              for (const k of [-1, 1]) {
+                const q = V(p.x + k * s, p.y - 0.52, p.z + (d % 2 ? k : -k) * s * 0.4);
+                l.push(p, q);
+                grow(q, d + 1, s * 0.52);
+              }
+            };
+            grow(V(0, 1.5, 0), 0, 0.85);
+            g.add(segs(l, 0.7), pts(n, 0.11, 0xc7ced8));
+          },
+          (g) => {
+            const bars = [];
+            for (let i = 0; i < 30; i++) {
+              const a = (i / 30) * 6.283,
+                b = mesh(new T.BoxGeometry(0.07, 1, 0.07), i % 5 ? brushed : energy, g);
+              b.position.set(Math.cos(a) * 1.3, -0.5, Math.sin(a) * 1.3);
+              bars.push(b);
+            }
+            g.userData.tick = (t) =>
+              bars.forEach(
+                (b, i) => (b.scale.y = 0.25 + 0.55 * Math.abs(Math.sin(i * 0.55 + t * 1.3))),
+              );
+          },
+          (g) => {
+            for (let i = 0; i < 5; i++) {
+              const r = mesh(
+                new T.TorusGeometry(0.75 + i * 0.17, 0.012, 8, 90),
+                i % 2 ? energy : chrome,
+                g,
+              );
+              r.position.z = (i - 2) * 0.26;
+            }
+            for (let i = -1; i <= 1; i += 2) {
+              const f = edges(new T.PlaneGeometry(1.1, 1.1), lineMat(0.5, 0x56d6e8));
+              f.position.z = i * 0.85;
+              g.add(f);
+            }
+          },
+        ];
+        const HOME = [
+          [1, 0, 0],
+          [-1, 0, 0],
+          [0, 1, 0],
+          [0, -1, 0],
+          [0, 0, 1],
+          [0, 0, -1],
+        ].map((a) => V(...a));
+        const mods = builders.map((b, i) => {
+          const g = new T.Group(),
+            body = new T.Group(),
+            env = new T.Group();
+          b(body);
+          envs[i](env);
+          g.add(body, env);
+          const gl = sprite(i % 2 ? cyanTex : blueTex, 1.7, 0.16);
+          g.add(gl);
+          root.add(g);
+          return { g, body, env, gl };
+        });
 
-/* ---------- copy buttons ---------- */
-$$('[data-copy]').forEach(function(b){b.addEventListener('click',function(){
-  const done=function(){b.classList.add('done');setTimeout(function(){b.classList.remove('done')},1600)};
-  try{navigator.clipboard.writeText(b.dataset.copy).then(done,function(){sel2(b)})}catch(e){sel2(b)}
-})});
-function sel2(b){const v=b.parentNode.querySelector('.v'); if(!v) return; const r=document.createRange(); r.selectNodeContents(v); const s=getSelection(); s.removeAllRanges(); s.addRange(r)}
+        /* connections with energy pulses */
+        const mkLinks = (pairs, o) =>
+          pairs.map(([a, b]) => {
+            const geo = new T.BufferGeometry().setFromPoints(
+              Array.from({ length: 24 }, () => V(0, 0, 0)),
+            );
+            const line = new T.Line(geo, lineMat(o));
+            line.frustumCulled = false;
+            root.add(line);
+            const dot = sprite(cyanTex, 0.26, 1);
+            root.add(dot);
+            return {
+              a,
+              b,
+              geo,
+              line,
+              dot,
+              o,
+              curve: new T.QuadraticBezierCurve3(V(0, 0, 0), V(0, 0, 0), V(0, 0, 0)),
+              off: rnd(),
+            };
+          });
+        const spokes = mkLinks(
+          [0, 1, 2, 3, 4, 5].map((i) => [-1, i]),
+          0.55,
+        );
+        const web = mkLinks(
+          [
+            [0, 2],
+            [2, 1],
+            [1, 3],
+            [3, 0],
+            [4, 0],
+            [4, 2],
+            [5, 1],
+            [5, 3],
+            [4, 1],
+            [5, 0],
+            [2, 5],
+            [3, 4],
+          ],
+          0.4,
+        );
+        /* evolved outer lattice */
+        const outer = new T.Group();
+        root.add(outer);
+        const rings = [3.35, 3.65, 3.95].map((r, i) => {
+          const m = mesh(
+            new T.TorusGeometry(r, 0.018 + (i === 1 ? 0.012 : 0), 10, 160),
+            i === 1 ? brushed : chrome,
+            outer,
+          );
+          m.rotation.set(1.2 + i * 0.75, i * 0.9, 0);
+          return m;
+        });
+        const geoL = edges(new T.IcosahedronGeometry(3.05, 1), lineMat(0.2, 0xc7ced8));
+        outer.add(geoL);
+        /* floating fragments and dust */
+        const N = 70,
+          frag = new T.InstancedMesh(new T.TetrahedronGeometry(0.07), brushed, N),
+          dummy = new T.Object3D();
+        for (let i = 0; i < N; i++) {
+          dummy.position.copy(onSphere(3.4 + rnd() * 5));
+          dummy.rotation.set(rnd() * 6, rnd() * 6, 0);
+          dummy.scale.setScalar(0.4 + rnd() * 1.3);
+          dummy.updateMatrix();
+          frag.setMatrixAt(i, dummy.matrix);
+        }
+        scene.add(frag);
+        const dust = pts(
+          Array.from({ length: 500 }, () => onSphere(5 + rnd() * 14)),
+          0.035,
+          0x9fb4ff,
+        );
+        dust.material.opacity = 0.5;
+        scene.add(dust);
 
-/* ---------- rotating tech words ---------- */
-const words=['Node.js','TypeScript','PostgreSQL','BullMQ + Redis','OpenSearch k-NN','Fastify 5'];
-const rot=$('#rot'); let wi=0;
-if(!RM){setInterval(function(){wi=(wi+1)%words.length; rot.textContent=words[wi]; rot.style.animation='none'; void rot.offsetWidth; rot.style.animation=''},2200)}
-
-/* ---------- floating code glyphs ---------- */
-if(!RM){
-  const hero=$('#hero'), G=['{ }','</>','=>','[]','01','&&','()','//','::','0x'];
-  for(let i=0;i<14;i++){
-    const s=document.createElement('span'); s.className='glyph'; s.textContent=G[i%G.length];
-    s.style.left=(Math.random()*96)+'%'; s.style.top=(30+Math.random()*65)+'%';
-    s.style.fontSize=(14+Math.random()*18)+'px';
-    s.style.animationDuration=(9+Math.random()*10)+'s'; s.style.animationDelay=(-Math.random()*12)+'s';
-    s.setAttribute('aria-hidden','true'); hero.appendChild(s);
-  }
-}
-
-/* ---------- typing code editor ---------- */
-const CODE=['type EngineerStack = {','','  backend: ["Node.js", "TypeScript", "Fastify", "Express"],','  data: ["PostgreSQL", "Redis", "MongoDB", "OpenSearch"],','  aiSearch: ["OpenAI Embeddings", "Vector Search", "BM25"],','  architecture: ["Microservices", "Event-Driven", "Multi-Tenant"],','  cloud: ["AWS", "Azure", "Docker", "BullMQ"],','  frontend: ["React", "React Native", "Vite"],','};','','const strengths = {','  apiDesign: true,','  systemDesign: true,','  performanceTuning: true,','  productionOwnership: true,','};','','export const profile: EngineerStack = skills;'].join('\n');
-const TERM=['$ pnpm profile:check','<ok>✓</ok> Backend: Node.js + TypeScript','<ok>✓</ok> Data & AI: PostgreSQL + OpenSearch','<ok>✓</ok> Systems: queues, microservices, cloud'];
-const cls=new Array(CODE.length).fill('');
-(function(){const re=/(\/\/.*)|("[^"]*")|\b(import|from|const|export|async|function|await|new|return)\b|\b([A-Za-z_]\w*)(?=\()|\b(\d+)\b/g;let m;
-  while((m=re.exec(CODE))){const c=m[1]?'cm':m[2]?'st':m[3]?'kw':m[4]?'fn':'nm';for(let i=m.index;i<m.index+m[0].length;i++)cls[i]=c}})();
-const esc=function(c){return c==='<'?'&lt;':c==='>'?'&gt;':c==='&'?'&amp;':c};
-const codeEl=$('#code'), termEl=$('#term');
-const CARET='<span class="caret"></span>';
-function renderCode(n,caret){
-  let out='',cur=null,buf='';
-  for(let i=0;i<n;i++){const c=cls[i]; if(c!==cur){out+=cur?'<span class="'+cur+'">'+buf+'</span>':buf;buf='';cur=c}buf+=esc(CODE[i])}
-  out+=cur?'<span class="'+cur+'">'+buf+'</span>':buf;
-  codeEl.innerHTML=out+(caret?CARET:'');
-}
-function renderTerm(lines,partial,caret){
-  const all=lines.slice(); if(partial!=null) all.push(partial);
-  termEl.innerHTML=all.map(function(l){return l.replace(/<ok>(.*?)<\/ok>/,'<span class="ok">$1</span>')}).join('\n')+(caret?CARET:'');
-}
-const sleep=function(ms){return new Promise(function(r){setTimeout(r,ms)})};
-async function loop(){
-  for(;;){
-    for(let i=0;i<=CODE.length;i++){renderCode(i,true); await sleep(CODE[i-1]==='\n'?90:24)}
-    renderCode(CODE.length,false); await sleep(500);
-    const done=[];
-    for(let t=0;t<TERM.length;t++){
-      const plain=TERM[t].replace(/<ok>(.*?)<\/ok>/,'$1');
-      if(t===0){for(let k=1;k<=plain.length;k++){renderTerm(done,plain.slice(0,k),true);await sleep(60)}}
-      else{await sleep(450)}
-      done.push(TERM[t]); renderTerm(done,null,t===TERM.length-1);
-    }
-    await sleep(4200);
-    renderCode(0,true); termEl.innerHTML=''; await sleep(500);
-  }
-}
-if(RM){renderCode(CODE.length,false);renderTerm(TERM,null,false)}else{loop()}
-})();
-</script>
-
-</body></html>
+        /* keyframes: hero, about, skills, projects, experience, contact */
+        const K = {
+          dist: [12.5, 7.4, 14.5, 12.5, 15, 23],
+          spread: [2.15, 2.9, 3.7, 3.7, 2.5, 2.4],
+          shell: [0, 1, 1.5, 2.3, 0.35, 0],
+          scale: [0.82, 0.9, 1.05, 0.8, 0.82, 0.9],
+          env: [0, 0, 0, 1, 0, 0],
+          evo: [0, 0, 0, 0, 1, 1],
+          web: [0.35, 0.5, 0.15, 0, 1, 0.85],
+          tilt: [0.34, 0.12, 0.02, 0.24, 0.4, 0.3],
+          yaw: [0.55, 1.7, 3.14 * 2, 7.2, 8.7, 10.4],
+          sx: [0.23, -0, 0.23, 0.22, 0.24, 0],
+          sy: [0, 0, 0, 0, 0, 0.15],
+          dim: [1, 0.9, 1, 0.9, 0.7, 1],
+        };
+        K.sx = [0.23, 0.28, 0.23, 0.22, 0.25, 0];
+        const at = (k, s) => {
+          const i = Math.min(4, Math.floor(s)),
+            f = s - i;
+          return K[k][i] + (K[k][i + 1] - K[k][i]) * f;
+        };
+        const ring = (i) => {
+          const a = (i / 6) * Math.PI * 2 + Math.PI / 6;
+          return V(Math.cos(a), Math.sin(a), 0);
+        };
+        const tags = SKILLS.map(([n]) => {
+          const t = el('<div class="tag"></div>');
+          t.textContent = n;
+          $("#tags").append(t);
+          return t;
+        });
+        /* skill module order matches SKILLS */
+        let W = 0,
+          H = 0;
+        function size() {
+          W = innerWidth;
+          H = $("#stage").clientHeight;
+          renderer.setSize(W, H, false);
+          cam.aspect = W / H;
+          dirty = true;
+        }
+        addEventListener("resize", size);
+        size();
+        let cur = target,
+          w = new Array(6).fill(0),
+          focusAmt = 0,
+          sx = 0,
+          drag = 0,
+          vel = 0,
+          px = null,
+          mx = 0,
+          my = 0,
+          last = performance.now(),
+          time = 0,
+          raf = 0;
+        addEventListener("pointerdown", (e) => {
+          if (
+            e.pointerType === "mouse" &&
+            !e.target.closest("a,button,summary,.sheet,.col,header,#detail")
+          )
+            px = e.clientX;
+        });
+        addEventListener("pointerup", () => (px = null));
+        addEventListener(
+          "pointermove",
+          (e) => {
+            if (px !== null) {
+              vel = (e.clientX - px) * 0.006;
+              drag += vel;
+              px = e.clientX;
+            }
+            mx = e.clientX / innerWidth - 0.5;
+            my = e.clientY / innerHeight - 0.5;
+            kick();
+          },
+          { passive: true },
+        );
+        const tmp = V(0, 0, 0);
+        function frame(now) {
+          raf = 0;
+          const dt = Math.min(0.05, (now - last) / 1000);
+          last = now;
+          if (!reduce) time += dt;
+          const k = reduce ? 1 : 1 - Math.exp(-dt * 6);
+          cur += (target - cur) * k;
+          const s = clamp(cur, 0, 5);
+          const mobile = W < 900,
+            inP = clamp(1 - Math.abs(s - 3) * 1.6);
+          focusAmt += ((focus >= 0 ? 1 : 0) * inP - focusAmt) * k;
+          for (let i = 0; i < 6; i++) w[i] += ((focus === i ? 1 : 0) * inP - w[i]) * k;
+          const E = at("env", s),
+            sp = at("spread", s),
+            sc = at("scale", s),
+            evo = at("evo", s),
+            sk = clamp(1 - Math.abs(s - 2) * 1.4),
+            finalS = clamp(s - 4);
+          sx += ((mobile ? 0 : at("sx", s) * (s > 2.5 && s < 3.5 ? side : 1)) - sx) * k;
+          const aspectFit = mobile ? Math.max(1, 0.95 / cam.aspect) : Math.max(1, 1.5 / cam.aspect);
+          cam.position.set(mx * 0.5, -my * 0.35, at("dist", s) * aspectFit * (1 - 0.4 * focusAmt));
+          cam.lookAt(0, 0, 0);
+          cam.setViewOffset(
+            W,
+            H,
+            -sx * W,
+            (mobile ? (s > 4.5 ? 0.2 : 0.23) : at("sy", s)) * H,
+            W,
+            H,
+          );
+          const idle = time * 0.09 * (1 - sk) * (1 - focusAmt);
+          const yaw = at("yaw", s) * (1 - sk) + sk * Math.PI * 2 + idle * (1 - sk) + drag;
+          if (px === null) {
+            drag *= 1 - k * 0.15;
+          }
+          root.rotation.set(0, 0, 0);
+          const q = new T.Quaternion().setFromEuler(new T.Euler(at("tilt", s), yaw, 0));
+          const flat = Math.max(sk, E);
+          core.quaternion.copy(q);
+          core.scale.setScalar(1 - 0.45 * E - 0.0 * sk);
+          core.visible = focusAmt < 0.98;
+          core.position.z = -6 * focusAmt;
+          core.scale.multiplyScalar(1 - focusAmt * 0.9);
+          outer.quaternion.copy(q);
+          outer.visible = evo > 0.01;
+          outer.scale.setScalar(0.5 + 0.5 * evo + 0.06 * finalS);
+          rings.forEach((r, i) => {
+            r.rotation.z = time * (0.05 + i * 0.03) * (i % 2 ? -1 : 1);
+          });
+          geoL.material.opacity = 0.2 * evo;
+          shells.forEach((g) =>
+            g.position.copy(g.userData.dir).multiplyScalar(at("shell", s) * 0.9),
+          );
+          gyro.forEach((g, i) => {
+            g.rotation.x = i * 1.1 + time * 0.25 * (i + 1) * 0.5 + s * 0.6;
+            g.rotation.y = i * 0.7 + time * 0.18;
+          });
+          heart.rotation.y = heartWire.rotation.y = time * 0.3 + s;
+          mods.forEach((m, i) => {
+            const orbit = HOME[i].clone().multiplyScalar(sp).applyQuaternion(q);
+            const r = ring(i).multiplyScalar(E > sk ? 4.1 : sp);
+            m.g.position.copy(orbit).lerp(r, ss(flat));
+            m.g.position.lerp(tmp.set(0, 0, 0), w[i]);
+            const away = clamp(focusAmt - w[i]);
+            m.g.position.addScaledVector(ring(i), away * 5);
+            m.g.position.z -= away * 7;
+            const hv = hover === i && sk > 0.5 ? 1 : 0;
+            m.g.scale.setScalar(sc * (1 + w[i] * 0.9 + hv * 0.25) * (1 - away * 0.65));
+            m.body.rotation.set(
+              0.35 + Math.sin(time * 0.4 + i) * 0.12,
+              time * 0.25 + i + s * 0.8,
+              0,
+            );
+            m.body.scale.setScalar(1 - E * 0.45);
+            const es = ss(E);
+            m.env.visible = es > 0.02;
+            m.env.scale.setScalar(Math.max(0.001, es * 0.82));
+            m.env.rotation.set(
+              i === 5 ? 0 : 0.3,
+              i === 5 ? Math.sin(time * 0.4) * 0.7 : time * 0.22 + s,
+              0,
+            );
+            m.env.userData.tick && m.env.userData.tick(time);
+            m.gl.material.opacity = 0.14 + w[i] * 0.2 + hv * 0.5;
+            const t = tags[i];
+            if (sk > 0.05) {
+              tmp.copy(m.g.position);
+              tmp.y -= 0.85;
+              tmp.project(cam);
+              const tw = t.offsetWidth;
+              t.style.opacity = mobile ? 0 : sk;
+              t.style.transform = `translate(${clamp(((tmp.x + 1) / 2) * W - tw / 2, 8, W - tw - 8)}px,${((1 - tmp.y) / 2) * H}px)`;
+              t.classList.toggle("on", !!hv);
+            } else t.style.opacity = 0;
+          });
+          const flow = (l, vis) => {
+            l.line.visible = l.dot.visible = vis > 0.02;
+            if (vis <= 0.02) return;
+            const A = l.a < 0 ? core.position : mods[l.a].g.position,
+              B = mods[l.b].g.position;
+            l.curve.v0.copy(A);
+            l.curve.v2.copy(B);
+            l.curve.v1
+              .copy(A)
+              .add(B)
+              .multiplyScalar(0.5)
+              .multiplyScalar(l.a < 0 ? 1.05 : 1.35);
+            l.curve.v1.z += 0.35;
+            const p = l.geo.attributes.position;
+            for (let j = 0; j < 24; j++) {
+              l.curve.getPoint(j / 23, tmp);
+              p.setXYZ(j, tmp.x, tmp.y, tmp.z);
+            }
+            p.needsUpdate = true;
+            l.line.material.opacity = l.o * vis;
+            l.curve.getPoint((time * 0.28 + l.off + s * 0.4) % 1, l.dot.position);
+            l.dot.material.opacity = vis;
+          };
+          spokes.forEach((l) => flow(l, 1 - focusAmt));
+          web.forEach((l, i) => flow(l, at("web", s) * (i < 8 ? 1 : evo) * (1 - focusAmt)));
+          frag.rotation.y = time * 0.025 + s * 0.18;
+          frag.rotation.x = s * 0.06;
+          dust.rotation.y = time * 0.008 + s * 0.05;
+          halo.material.opacity = 0.17 + 0.09 * finalS;
+          const inCase = focus < 0 && inP > 0.5;
+          renderer.domElement.style.opacity =
+            (inCase ? 0.34 : at("dim", s)) * (mobile && s > 0.5 && s < 4.5 ? 0.62 : 1);
+          renderer.render(scene, cam);
+          const settling = Math.abs(target - cur) > 0.001;
+          if (!document.hidden && (!reduce || settling || dirty)) {
+            dirty = false;
+            kick();
+          }
+        }
+        kick = () => {
+          if (!raf) raf = requestAnimationFrame(frame);
+        };
+        document.addEventListener("visibilitychange", () => {
+          if (!document.hidden) {
+            last = performance.now();
+            kick();
+          }
+        });
+        kick();
+      })();
+    </script>
+  </body>
+</html>
